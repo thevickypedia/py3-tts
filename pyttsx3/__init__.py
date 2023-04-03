@@ -1,10 +1,12 @@
-from .engine import Engine
 import weakref
+
+from .engine import Engine
 
 _activeEngines = weakref.WeakValueDictionary()
 
+
 def init(driverName=None, debug=False):
-    '''
+    """
     Constructs a new TTS engine instance or reuses the existing instance for
     the driver name.
 
@@ -15,7 +17,7 @@ def init(driverName=None, debug=False):
     @type debug: bool
     @return: Engine instance
     @rtype: L{engine.Engine}
-    '''
+    """
     try:
         eng = _activeEngines[driverName]
     except KeyError:
@@ -28,5 +30,3 @@ def speak(text):
     engine = init()
     engine.say(text)
     engine.runAndWait()
-
-

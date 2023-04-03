@@ -1,4 +1,5 @@
 import comtypes.client  # Importing comtypes.client will make the gen subpackage
+
 try:
     from comtypes.gen import SpeechLib  # comtypes
 except ImportError:

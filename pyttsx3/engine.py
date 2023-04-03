@@ -1,6 +1,7 @@
-from . import driver
 import traceback
 import weakref
+
+from . import driver
 
 
 class Engine(object):
@@ -97,7 +98,7 @@ class Engine(object):
             notifications about this utterance.
         @type name: str
         """
-        if text == None:
+        if text is None:
             return "Argument value can't be none or empty"
         else:
             self.proxy.say(text, name)
@@ -109,7 +110,7 @@ class Engine(object):
         self.proxy.stop()
 
     def save_to_file(self, text, filename, name=None):
-        '''
+        """
         Adds an utterance to speak to the event queue.
 
         @param text: Text to sepak
@@ -118,7 +119,7 @@ class Engine(object):
         @param name: Name to associate with this utterance. Included in
             notifications about this utterance.
         @type name: str
-        '''
+        """
         self.proxy.save_to_file(text, filename, name)
 
     def isBusy(self):

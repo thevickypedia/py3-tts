@@ -1,12 +1,11 @@
-
-import time
 import ctypes
-import io
-import wave
 import os
+import time
+import wave
 from tempfile import NamedTemporaryFile
-from ..voice import Voice
+
 from . import _espeak, toUtf8, fromUtf8
+from ..voice import Voice
 
 
 def buildDriver(proxy):
@@ -52,7 +51,7 @@ class EspeakDriver(object):
         self._proxy.setBusy(True)
         self._proxy.notify('started-utterance')
         _espeak.Synth(toUtf8(text), flags=_espeak.ENDPAUSE |
-                      _espeak.CHARS_UTF8)
+                                          _espeak.CHARS_UTF8)
 
     def stop(self):
         if _espeak.IsPlaying():
@@ -135,7 +134,7 @@ class EspeakDriver(object):
     def save_to_file(self, text, filename):
         code = self.numerise(filename)
         _espeak.Synth(toUtf8(text), flags=_espeak.ENDPAUSE |
-                    _espeak.CHARS_UTF8, user_data=code)
+                                          _espeak.CHARS_UTF8, user_data=code)
 
     def endLoop(self):
         self._looping = False
@@ -172,7 +171,8 @@ class EspeakDriver(object):
                     f.writeframes(self._data_buffer)
 
                 if event.user_data:
-                    os.system('ffmpeg -y -i {} {} -loglevel quiet'.format(stream.name, self.decode_numeric(event.user_data)))
+                    os.system(
+                        'ffmpeg -y -i {} {} -loglevel quiet'.format(stream.name, self.decode_numeric(event.user_data)))
                 else:
                     os.system('aplay {} -q'.format(stream.name))  # -q for quiet
 
@@ -180,8 +180,8 @@ class EspeakDriver(object):
                 self._proxy.notify('finished-utterance', completed=True)
                 self._proxy.setBusy(False)
             i += 1
-        
+
         if numsamples > 0:
             self._data_buffer += ctypes.string_at(wav, numsamples *
-                                                ctypes.sizeof(ctypes.c_short))
+                                                  ctypes.sizeof(ctypes.c_short))
         return 0
