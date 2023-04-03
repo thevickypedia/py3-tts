@@ -14,7 +14,7 @@
 ## Installation :
 
 
-	pip install pyttsx3
+	pip install py3-tts
 
 > If you get installation errors , make sure you first upgrade your wheel version using :  
 `pip install --upgrade wheel`

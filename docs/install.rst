@@ -15,23 +15,23 @@ The :func:`pyttsx3.init` documentation explains how to select a specific synthes
 Using pip to install system-wide
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have pip installed, you can use it to install pyttsx3 in the system site-packages folder.
+If you have pip installed, you can use it to install py3-tts in the system site-packages folder.
 
 On Windows
 ##########
 
-First install the `pywin32-extensions <http://sourceforge.net/projects/pywin32/files/pywin32/>`_ package using its Windows installer. Then use pip to install pyttsx3.
+First install the `pywin32-extensions <http://sourceforge.net/projects/pywin32/files/pywin32/>`_ package using its Windows installer. Then use pip to install py3-tts.
 
 .. code-block:: bash
 
-   $ pip install pyttsx3
+   $ pip install py3-tts
 
 On OSX or Linux
 ###############
 
 .. code-block:: bash
 
-   $ sudo pip install pyttsx3
+   $ sudo pip install py3-tts
 
 Using pip to install in a virtualenv
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -41,7 +41,7 @@ If you have virtualenv_ installed with pip_, you can use pip to install a copy o
 On Windows
 ##########
 
-You'll need to install the `pywin32-extensions <http://sourceforge.net/projects/pywin32/files/pywin32/>`_ package system-wide using its Windows installer. Then you'll need to give your virtualenv access to the system site-packages in order to install pyttsx3.
+You'll need to install the `pywin32-extensions <http://sourceforge.net/projects/pywin32/files/pywin32/>`_ package system-wide using its Windows installer. Then you'll need to give your virtualenv access to the system site-packages in order to install py3-tts.
 
 .. code-block:: bash
 
@@ -50,7 +50,7 @@ You'll need to install the `pywin32-extensions <http://sourceforge.net/projects/
    Installing setuptools............done.
    Installing pip...............done.
    $ myproj\Scripts\activate
-   (myproj)$ pip install pyttsx3
+   (myproj)$ pip install py3-tts
 
 On OSX
 ######
@@ -64,7 +64,7 @@ Unless you wish to compile your own version of pyobjc (a lengthy process), you w
    Installing setuptools............done.
    Installing pip...............done.
    $ . myproj/bin/activate
-   (myproj)$ pip install pyttsx3
+   (myproj)$ pip install py3-tts
    ...
    Successfully installed pyttsx3
    Cleaning up...
@@ -81,9 +81,9 @@ code-block:: bash
    Installing setuptools............done.
    Installing pip...............done.
    $ . myproj/bin/activate
-   (myproj)$ pip install pyttsx3
+   (myproj)$ pip install py3-tts
    ...
-   Successfully installed pyttsx3
+   Successfully installed py3-tts
    Cleaning up...
 
 

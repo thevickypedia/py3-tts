@@ -21,6 +21,6 @@ This documentation describes the pyttsx3 Python package v |release| and was rend
 * `Package listing in PyPI`__
 * `Documentation at ReadTheDocs`__
 
-__ https://github.com/nateshmbhat/pyttsx3
-__ http://pypi.python.org/pypi/pyttsx3
+__ https://github.com/thevickypedia/py3-tts
+__ http://pypi.python.org/pypi/py3-tts
 __ https://pyttsx3.readthedocs.org/
