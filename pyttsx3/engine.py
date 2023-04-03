@@ -92,7 +92,7 @@ class Engine(object):
         """
         Adds an utterance to speak to the event queue.
 
-        @param text: Text to sepak
+        @param text: Text to speak
         @type text: unicode
         @param name: Name to associate with this utterance. Included in
             notifications about this utterance.
@@ -113,7 +113,7 @@ class Engine(object):
         """
         Adds an utterance to speak to the event queue.
 
-        @param text: Text to sepak
+        @param text: Text to speak
         @type text: unicode
         @param filename: the name of file to save.
         @param name: Name to associate with this utterance. Included in
