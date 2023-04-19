@@ -12,8 +12,11 @@ def buildDriver(proxy):
 class NSSpeechDriver(NSObject):
     @objc.python_method
     def initWithProxy(self, proxy):
-        self = super(NSSpeechDriver, self).init()
-        if self:
+        try:
+            proxy_attr = super(NSSpeechDriver, self).init()
+        except AttributeError:
+            proxy_attr = self
+        if proxy_attr:
             self._proxy = proxy
             self._tts = NSSpeechSynthesizer.alloc().initWithVoice_(None)
             self._tts.setDelegate_(self)
