@@ -13,7 +13,7 @@ class NSSpeechDriver(NSObject):
     @objc.python_method
     def initWithProxy(self, proxy):
         try:
-            proxy_attr = super(NSSpeechDriver, self).init()
+            proxy_attr = objc.super(NSSpeechDriver, self).init()
         except AttributeError:
             proxy_attr = self
         if proxy_attr:
