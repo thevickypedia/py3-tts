@@ -1,6 +1,6 @@
 [project]
 name = "py3-tts"
-version = "3.1.1"
+version = "3.2b"
 dependencies = [
     "comtypes; platform_system == 'Windows'",
     "pypiwin32; platform_system == 'Windows'",
@@ -8,7 +8,7 @@ dependencies = [
     "pyobjc>=2.4; platform_system == 'Darwin'"
 ]
 description = "Text to Speech (TTS) library for Python 3. Works without internet connection or delay. Supports multiple TTS engines, including Sapi5, nsss, and espeak."
-readme = "README.rst"
+readme = "README.md"
 authors = [{ name = "Vignesh Sivanandha Rao", email = "svignesh1793@gmail.com" }]
 license = { file = "LICENSE" }
 classifiers = [
@@ -25,7 +25,7 @@ classifiers = [
     "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7"
 ]
-keywords = ["pyttsx", "ivona", "pyttsx for python3", "TTS for python3", "pyttsx3", "text to speech for python", "tts",
+keywords = ["pyttsx", "ivona", "pyttsx for python3", "TTS for python3", "py3-tts", "text to speech for python", "tts",
     "text to speech", "speech", "speech synthesis", "offline text to speech", "offline tts", "gtts"]
 requires-python = ">=3"
 
@@ -37,6 +37,6 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project.urls]
-Homepage = "https://github.com/thevickypedia/pyttsx3"
+Homepage = "https://github.com/thevickypedia/py3-tts"
 Docs = "https://pyttsx3.readthedocs.org/"
-Source = "https://github.com/thevickypedia/pyttsx3"
+Source = "https://github.com/thevickypedia/py3-tts"
