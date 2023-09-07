@@ -1,6 +1,6 @@
 [project]
 name = "py3-tts"
-version = "3.2b"
+version = "3.2"
 dependencies = [
     "comtypes; platform_system == 'Windows'",
     "pypiwin32; platform_system == 'Windows'",

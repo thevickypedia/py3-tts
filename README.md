@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/logo.svg?sanitize=true" width="200px" height="200px">
+  <img src="https://raw.githubusercontent.com/thevickypedia/py3-tts/master/.github/logo.svg?sanitize=true" width="200px" height="200px">
 </p>
 <h2 align="center">Offline Text To Speech (TTS) converter for Python </h2>
 
@@ -11,10 +11,10 @@
 [![](https://img.shields.io/github/license/thevickypedia/py3-tts?style=plastic)](https://github.com/thevickypedia/py3-tts)
 
 [![](https://img.shields.io/pypi/v/py3-tts.svg?style=plastic)](https://pypi.org/project/py3-tts/)
-
 [![](https://img.shields.io/github/languages/top/thevickypedia/py3-tts.svg?style=plastic)](https://github.com/thevickypedia/py3-tts)
 
 [![](https://img.shields.io/badge/author-thevickypedia-green.svg)](https://github.com/thevickypedia)
+[![](https://github.com/thevickypedia/py3-tts/actions/workflows/pythonpublish.yml/badge.svg)](https://github.com/thevickypedia/py3-tts/actions/workflows/pythonpublish.yml)
 
 `py3-tts` is a text-to-speech conversion library in Python. Unlike alternative libraries, **it works offline**.
 
