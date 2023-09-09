@@ -13,10 +13,13 @@
 [![](https://img.shields.io/pypi/v/py3-tts.svg?style=plastic)](https://pypi.org/project/py3-tts/)
 [![](https://img.shields.io/github/languages/top/thevickypedia/py3-tts.svg?style=plastic)](https://github.com/thevickypedia/py3-tts)
 
-[![](https://img.shields.io/badge/author-thevickypedia-green.svg)](https://github.com/thevickypedia)
 [![](https://github.com/thevickypedia/py3-tts/actions/workflows/pythonpublish.yml/badge.svg)](https://github.com/thevickypedia/py3-tts/actions/workflows/pythonpublish.yml)
+[![](https://github.com/thevickypedia/py3-tts/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/thevickypedia/py3-tts/actions/workflows/pages/pages-build-deployment)
 
-`py3-tts` is a text-to-speech conversion library in Python. Unlike alternative libraries, **it works offline**.
+[![](https://img.shields.io/badge/re_implementer-thevickypedia-blue.svg)](https://github.com/thevickypedia)
+[![](https://img.shields.io/badge/author-nateshmbhat-orange.svg)](https://github.com/nateshmbhat)
+
+`py3-tts` (originally [`pyttsx3`](https://github.com/nateshmbhat/pyttsx3)) is a text-to-speech conversion library in Python. Unlike alternative libraries, **it works offline**.
 
 ## Installation
 

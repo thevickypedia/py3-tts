@@ -36,7 +36,7 @@ On OSX or Linux
 Using pip to install in a virtualenv
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have virtualenv_ installed with pip_, you can use pip to install a copy of pyttsx3 in the virtual environment folder.
+If you have virtualenv_ installed with pip_, you can use pip to install a copy of py3-tts in the virtual environment folder.
 
 On Windows
 ##########
@@ -66,7 +66,7 @@ Unless you wish to compile your own version of pyobjc (a lengthy process), you w
    $ . myproj/bin/activate
    (myproj)$ pip install py3-tts
    ...
-   Successfully installed pyttsx3
+   Successfully installed py3-tts
    Cleaning up...
 
 On Linux
@@ -74,7 +74,7 @@ On Linux
 
 pyttsx3 requires no Python dependencies on Linux. You can cut-off the pyttsx3 virtualenv from the system site-packages.
 
-code-block:: bash
+.. code-block:: bash
 
    $ virtualenv --no-site-packages myproj
    New python executable in myproj/bin/python
@@ -83,7 +83,7 @@ code-block:: bash
    $ . myproj/bin/activate
    (myproj)$ pip install py3-tts
    ...
-   Successfully installed pyttsx3
+   Successfully installed py3-tts
    Cleaning up...
 
 

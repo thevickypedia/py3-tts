@@ -64,7 +64,7 @@
 </section>
 <section id="using-pip-to-install-in-a-virtualenv">
 <h2>Using pip to install in a virtualenv<a class="headerlink" href="#using-pip-to-install-in-a-virtualenv" title="Permalink to this heading">¶</a></h2>
-<p>If you have <a class="reference external" href="https://pypi.python.org/pypi/virtualenv/1.10.1">virtualenv</a> installed with <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>, you can use pip to install a copy of pyttsx3 in the virtual environment folder.</p>
+<p>If you have <a class="reference external" href="https://pypi.python.org/pypi/virtualenv/1.10.1">virtualenv</a> installed with <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>, you can use pip to install a copy of py3-tts in the virtual environment folder.</p>
 <section id="id1">
 <h3>On Windows<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <p>You’ll need to install the <a class="reference external" href="http://sourceforge.net/projects/pywin32/files/pywin32/">pywin32-extensions</a> package system-wide using its Windows installer. Then you’ll need to give your virtualenv access to the system site-packages in order to install py3-tts.</p>
@@ -87,7 +87,7 @@ Installing<span class="w"> </span>pip...............done.
 $<span class="w"> </span>.<span class="w"> </span>myproj/bin/activate
 <span class="o">(</span>myproj<span class="o">)</span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>py3-tts
 ...
-Successfully<span class="w"> </span>installed<span class="w"> </span>pyttsx3
+Successfully<span class="w"> </span>installed<span class="w"> </span>py3-tts
 Cleaning<span class="w"> </span>up...
 </pre></div>
 </div>
@@ -95,18 +95,17 @@ Cleaning<span class="w"> </span>up...
 <section id="on-linux">
 <h3>On Linux<a class="headerlink" href="#on-linux" title="Permalink to this heading">¶</a></h3>
 <p>pyttsx3 requires no Python dependencies on Linux. You can cut-off the pyttsx3 virtualenv from the system site-packages.</p>
-<p>code-block:: bash</p>
-<blockquote>
-<div><p>$ virtualenv –no-site-packages myproj
-New python executable in myproj/bin/python
-Installing setuptools…………done.
-Installing pip……………done.
-$ . myproj/bin/activate
-(myproj)$ pip install py3-tts
-…
-Successfully installed pyttsx3
-Cleaning up…</p>
-</div></blockquote>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>virtualenv<span class="w"> </span>--no-site-packages<span class="w"> </span>myproj
+New<span class="w"> </span>python<span class="w"> </span>executable<span class="w"> </span><span class="k">in</span><span class="w"> </span>myproj/bin/python
+Installing<span class="w"> </span>setuptools............done.
+Installing<span class="w"> </span>pip...............done.
+$<span class="w"> </span>.<span class="w"> </span>myproj/bin/activate
+<span class="o">(</span>myproj<span class="o">)</span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>py3-tts
+...
+Successfully<span class="w"> </span>installed<span class="w"> </span>py3-tts
+Cleaning<span class="w"> </span>up...
+</pre></div>
+</div>
 </section>
 </section>
 </section>
