@@ -4,6 +4,7 @@ import traceback
 import weakref
 
 
+# noinspection PyPep8Naming
 class DriverProxy(object):
     """
     Proxy to a driver implementation.
@@ -25,7 +26,7 @@ class DriverProxy(object):
     @type _iterator: iterator
     """
 
-    def __init__(self, engine, driverName, debug):
+    def __init__(self, engine, driverName: str, debug: bool):
         """
         Constructor.
 
@@ -54,7 +55,7 @@ class DriverProxy(object):
         self._engine = engine
         self._queue = []
         self._busy = True
-        self._name = None
+        self._name = ""
         self._iterator = None
         self._debug = debug
 
@@ -89,10 +90,11 @@ class DriverProxy(object):
             try:
                 cmd[0](*cmd[1])
             except Exception as e:
-                self.notify('error', exception=e)
+                self.notify('error', exception=e.__dict__)
                 if self._debug:
                     traceback.print_exc()
 
+    # noinspection PyProtectedMember,PyTypeChecker
     def notify(self, topic, **kwargs):
         """
         Sends a notification to the engine from the driver.
@@ -156,6 +158,8 @@ class DriverProxy(object):
 
         @param text: Text to speak
         @type text: unicode
+        @param filename: Name of the file
+        @type filename: str
         @param name: Name to associate with the utterance
         @type name: str
         """

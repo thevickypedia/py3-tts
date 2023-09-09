@@ -5,7 +5,8 @@ from .engine import Engine
 _activeEngines = weakref.WeakValueDictionary()
 
 
-def init(driverName=None, debug=False):
+# noinspection PyPep8Naming
+def init(driverName: str = None, debug: bool = False) -> Engine:
     """
     Constructs a new TTS engine instance or reuses the existing instance for
     the driver name.
@@ -21,12 +22,11 @@ def init(driverName=None, debug=False):
     try:
         eng = _activeEngines[driverName]
     except KeyError:
-        eng = Engine(driverName, debug)
-        _activeEngines[driverName] = eng
+        try:
+            eng = Engine(driverName=driverName, debug=debug)
+        except ModuleNotFoundError:
+            raise ValueError("\n\nDriver '%s' is unavailable" % driverName)
+        except Exception:
+            raise RuntimeError("\n\nUnable to load driver '%s'" % driverName)
+    _activeEngines[driverName] = eng
     return eng
-
-
-def speak(text):
-    engine = init()
-    engine.say(text)
-    engine.runAndWait()

@@ -8,10 +8,12 @@ from . import _espeak, toUtf8, fromUtf8
 from ..voice import Voice
 
 
+# noinspection PyPep8Naming
 def buildDriver(proxy):
     return EspeakDriver(proxy)
 
 
+# noinspection PyPep8Naming
 class EspeakDriver(object):
     _moduleInitialized = False
     _defaultVoice = ''
@@ -44,26 +46,25 @@ class EspeakDriver(object):
     def decode_numeric(self, data):
         return self._numerise_buffer[int(data) - 1]
 
-    def destroy(self):
+    @staticmethod
+    def destroy():
         _espeak.SetSynthCallback(None)
 
     def say(self, text):
         self._proxy.setBusy(True)
         self._proxy.notify('started-utterance')
-        _espeak.Synth(toUtf8(text), flags=_espeak.ENDPAUSE |
-                                          _espeak.CHARS_UTF8)
+        _espeak.Synth(toUtf8(text), flags=_espeak.ENDPAUSE | _espeak.CHARS_UTF8)
 
     def stop(self):
         if _espeak.IsPlaying():
             self._stopping = True
 
-    def getProperty(self, name):
+    @staticmethod
+    def getProperty(name: str):
         if name == 'voices':
             voices = []
             for v in _espeak.ListVoices(None):
-                kwargs = {}
-                kwargs['id'] = fromUtf8(v.name)
-                kwargs['name'] = fromUtf8(v.name)
+                kwargs = {'id': fromUtf8(v.name), 'name': fromUtf8(v.name)}
                 if v.languages:
                     kwargs['languages'] = [v.languages]
                 genders = [None, 'male', 'female']
@@ -83,7 +84,8 @@ class EspeakDriver(object):
         else:
             raise KeyError('unknown property %s' % name)
 
-    def setProperty(self, name, value):
+    @staticmethod
+    def setProperty(name: str, value):
         if name == 'voice':
             if value is None:
                 return
@@ -133,8 +135,7 @@ class EspeakDriver(object):
 
     def save_to_file(self, text, filename):
         code = self.numerise(filename)
-        _espeak.Synth(toUtf8(text), flags=_espeak.ENDPAUSE |
-                                          _espeak.CHARS_UTF8, user_data=code)
+        _espeak.Synth(toUtf8(text), flags=_espeak.ENDPAUSE | _espeak.CHARS_UTF8, user_data=code)
 
     def endLoop(self):
         self._looping = False

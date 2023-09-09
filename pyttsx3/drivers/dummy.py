@@ -3,6 +3,7 @@ import time
 from ..voice import Voice
 
 
+# noinspection PyPep8Naming
 def buildDriver(proxy):
     """
     Builds a new instance of a driver and returns it for use by the driver
@@ -14,6 +15,7 @@ def buildDriver(proxy):
     return DummyDriver(proxy)
 
 
+# noinspection PyPep8Naming,PyBroadException
 class DummyDriver(object):
     """
     Dummy speech engine implementation. Documents the interface, notifications,
@@ -53,7 +55,7 @@ class DummyDriver(object):
     def destroy(self):
         """
         Optional method that will be called when the driver proxy is being
-        destroyed. Can cleanup any resources to make sure the engine terminates
+        destroyed. Can clean up any resources to make sure the engine terminates
         properly.
         """
         pass
@@ -157,7 +159,7 @@ class DummyDriver(object):
     def setProperty(self, name, value):
         """
         Sets one of the supported property values of the speech engine listed
-        above. If a value is invalid, attempts to clip it / coerce so it is
+        above. If a value is invalid, attempts to clip it / coerce, so it is
         valid before giving up and firing an exception.
 
         @param name: Property name

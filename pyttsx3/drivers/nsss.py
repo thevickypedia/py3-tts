@@ -1,3 +1,4 @@
+# noinspection PyUnresolvedReferences
 from AppKit import NSSpeechSynthesizer
 from Foundation import *
 from PyObjCTools import AppHelper
@@ -5,11 +6,19 @@ from PyObjCTools import AppHelper
 from ..voice import Voice
 
 
+# noinspection PyPep8Naming
 def buildDriver(proxy):
     return NSSpeechDriver.alloc().initWithProxy(proxy)
 
 
+# noinspection PyUnresolvedReferences,PyPep8Naming,PyUnusedLocal
 class NSSpeechDriver(NSObject):
+
+    def __init__(self):
+        self._proxy = None
+        self._tts = None
+        self._completed = False
+
     @objc.python_method
     def initWithProxy(self, proxy):
         try:
@@ -37,7 +46,8 @@ class NSSpeechDriver(NSObject):
             0.0, self, 'onPumpFirst:', None, False)
         AppHelper.runConsoleEventLoop()
 
-    def endLoop(self):
+    @staticmethod
+    def endLoop():
         AppHelper.stopEventLoop()
 
     def iterate(self):

@@ -1,3 +1,4 @@
+# noinspection PyUnresolvedReferences
 import comtypes.client  # Importing comtypes.client will make the gen subpackage
 
 try:
@@ -6,8 +7,10 @@ except ImportError:
     # Generate the SpeechLib lib and any associated files
     engine = comtypes.client.CreateObject("SAPI.SpVoice")
     stream = comtypes.client.CreateObject("SAPI.SpFileStream")
+    # noinspection PyUnresolvedReferences
     from comtypes.gen import SpeechLib
 
+# noinspection PyUnresolvedReferences
 import pythoncom
 import time
 import math
@@ -27,10 +30,12 @@ E_REG = {MSSAM: (137.89, 1.11),
          MSMIKE: (154.37, 1.11)}
 
 
+# noinspection PyPep8Naming
 def buildDriver(proxy):
     return SAPI5Driver(proxy)
 
 
+# noinspection PyPep8Naming,PyShadowingNames
 class SAPI5Driver(object):
     def __init__(self, proxy):
         self._tts = comtypes.client.CreateObject('SAPI.SPVoice')
@@ -74,7 +79,8 @@ class SAPI5Driver(object):
         stream.close()
         os.chdir(cwd)
 
-    def _toVoice(self, attr):
+    @staticmethod
+    def _toVoice(attr):
         return Voice(attr.Id, attr.GetDescription())
 
     def _tokenFromId(self, id_):
@@ -142,6 +148,7 @@ class SAPI5Driver(object):
             yield
 
 
+# noinspection PyPep8Naming,PyProtectedMember,PyUnusedLocal,PyShadowingNames
 class SAPI5DriverEventSink(object):
     def __init__(self):
         self._driver = None

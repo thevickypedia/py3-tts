@@ -4,12 +4,13 @@ import weakref
 from . import driver
 
 
+# noinspection PyPep8Naming
 class Engine(object):
     """
     @ivar proxy: Proxy to a driver implementation
     @type proxy: L{DriverProxy}
-    @ivar _connects: Array of subscriptions
-    @type _connects: list
+    @ivar _connects: Dictionary of list of subscriptions
+    @type _connects: dict
     @ivar _inLoop: Running an event loop or not
     @type _inLoop: bool
     @ivar _driverLoop: Using a driver event loop or not
@@ -18,7 +19,7 @@ class Engine(object):
     @type _debug: bool
     """
 
-    def __init__(self, driverName=None, debug=False):
+    def __init__(self, driverName: str = None, debug: bool = False):
         """
         Constructs a new TTS engine instance.
 
@@ -35,6 +36,7 @@ class Engine(object):
         self._driverLoop = True
         self._debug = debug
 
+    # noinspection PyBroadException
     def _notify(self, topic, **kwargs):
         """
         Invokes callbacks for an event topic.
@@ -143,8 +145,8 @@ class Engine(object):
 
         @param name: Name of the property to fetch
         @type name: str
-        @return: Value associated with the property
-        @rtype: object
+        @return: List of values associated with the property
+        @rtype: list
         @raise KeyError: When the property name is unknown
         """
         return self.proxy.getProperty(name)
@@ -163,7 +165,7 @@ class Engine(object):
 
         @param name: Name of the property to fetch
         @type name: str
-        @param: Value to set for the property
+        @param value: Value to set for the property
         @rtype: object
         @raise KeyError: When the property name is unknown
         """

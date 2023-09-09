@@ -1,9 +1,10 @@
 """
 Utility functions to help with Python 2/3 compatibility
 """
-from .. import six
+import six
 
 
+# noinspection PyPep8Naming
 def toUtf8(value):
     """
     Takes in a value and converts it to a text (unicode) type.  Then decodes that
@@ -15,6 +16,7 @@ def toUtf8(value):
     return six.text_type(value).encode('utf-8')
 
 
+# noinspection PyPep8Naming
 def fromUtf8(value):
     """
     Takes in a byte array encoded as utf-8 and returns a text (unicode) type.  In
