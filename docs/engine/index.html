@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Using py3-tts &#8212; py3-tts 3.3a documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Implementing drivers" href="../drivers/" />
+    <link rel="prev" title="Supported synthesizers" href="../support/" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <span class="target" id="module-pyttsx3"></span><section id="using-py3-tts">
+<h1>Using py3-tts<a class="headerlink" href="#using-py3-tts" title="Permalink to this heading">¶</a></h1>
+<p>An application invokes the <a class="reference internal" href="#pyttsx3.init" title="pyttsx3.init"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyttsx3.init()</span></code></a> factory function to get a reference to a <code class="xref py py-class docutils literal notranslate"><span class="pre">pyttsx3.Engine</span></code> instance. During construction, the engine initializes a <a class="reference internal" href="../drivers/#pyttsx3.driver.DriverProxy" title="pyttsx3.driver.DriverProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyttsx3.driver.DriverProxy</span></code></a> object responsible for loading a speech engine driver implementation from the <a class="reference internal" href="../drivers/#module-pyttsx3.drivers" title="pyttsx3.drivers: The package containing the available driver implementations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyttsx3.drivers</span></code></a> module. After construction, an application uses the engine object to register and unregister event callbacks; produce and stop speech; get and set speech engine properties; and start and stop event loops.</p>
+<section id="the-engine-factory">
+<h2>The Engine factory<a class="headerlink" href="#the-engine-factory" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyttsx3.init">
+<span class="sig-prename descclassname"><span class="pre">pyttsx3.</span></span><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">driverName</span> <span class="pre">:</span> <span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span> <span class="pre">:</span> <span class="pre">bool</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pyttsx3.Engine</span></span></span><a class="headerlink" href="#pyttsx3.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a reference to an engine instance that will use the given driver. If the requested driver is already in use by another engine instance, that engine is returned. Otherwise, a new engine is created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>driverName</strong> – <p>Name of the <a class="reference internal" href="../drivers/#module-pyttsx3.drivers" title="pyttsx3.drivers: The package containing the available driver implementations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyttsx3.drivers</span></code></a> module to load and use. Defaults to the best available driver for the platform, currently:</p>
+<ul>
+<li><p><cite>sapi5</cite> - SAPI5 on Windows</p></li>
+<li><p><cite>nsss</cite> - NSSpeechSynthesizer on Mac OS X</p></li>
+<li><p><cite>espeak</cite> - eSpeak on every other platform</p></li>
+</ul>
+</p></li>
+<li><p><strong>debug</strong> – Enable debug output or not.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ImportError</strong> – When the requested driver is not found</p></li>
+<li><p><strong>RuntimeError</strong> – When the driver fails to initialize</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-pyttsx3.engine">
+<span id="the-engine-interface"></span><h2>The Engine interface<a class="headerlink" href="#module-pyttsx3.engine" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyttsx3.engine.</span></span><span class="sig-name descname"><span class="pre">Engine</span></span><a class="headerlink" href="#pyttsx3.engine.Engine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides application access to text-to-speech synthesis.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a callback for notifications on the given topic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>topic</strong> – Name of the event to subscribe to.</p></li>
+<li><p><strong>cb</strong> – Function to invoke when the event fires.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A token that the caller can use to unsubscribe the callback later.</p>
+</dd>
+</dl>
+<p>The following are the valid topics and their callback signatures.</p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">started-utterance</span></span></dt>
+<dd><p>Fired when the engine begins speaking an utterance. The associated callback must have the following signature.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.onStartUtterance">
+<span class="sig-name descname"><span class="pre">onStartUtterance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.onStartUtterance" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name associated with the utterance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">started-word</span></span></dt>
+<dd><p>Fired when the engine begins speaking a word. The associated callback must have the folowing signature.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.onStartWord">
+<span class="sig-name descname"><span class="pre">onStartWord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">integer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">integer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyttsx3.engine.Engine.onStartWord" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name associated with the utterance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">finished-utterance</span></span></dt>
+<dd><p>Fired when the engine finishes speaking an utterance. The associated callback must have the folowing signature.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.onFinishUtterance">
+<span class="sig-name descname"><span class="pre">onFinishUtterance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">completed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.onFinishUtterance" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name associated with the utterance.</p></li>
+<li><p><strong>completed</strong> – True if the utterance was output in its entirety or not.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">error</span></span></dt>
+<dd><p>Fired when the engine encounters an error. The associated callback must have the folowing signature.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.onError">
+<span class="sig-name descname"><span class="pre">onError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Exception</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.onError" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name associated with the utterance that caused the error.</p></li>
+<li><p><strong>exception</strong> – Exception that was raised.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.disconnect">
+<span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyttsx3.engine.Engine.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters a notification callback.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>token</strong> – Token returned by <a class="reference internal" href="#pyttsx3.engine.Engine.connect" title="pyttsx3.engine.Engine.connect"><code class="xref py py-meth docutils literal notranslate"><span class="pre">connect()</span></code></a> associated with the callback to be disconnected.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.endLoop">
+<span class="sig-name descname"><span class="pre">endLoop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.endLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ends a running event loop. If <a class="reference internal" href="#pyttsx3.engine.Engine.startLoop" title="pyttsx3.engine.Engine.startLoop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">startLoop()</span></code></a> was called with <cite>useDriverLoop</cite> set to True, this method stops processing of engine commands and immediately exits the event loop. If it was called with False, this method stops processing of engine commands, but it is up to the caller to end the external event loop it started.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>RuntimeError</strong> – When the loop is not running</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.getProperty">
+<span class="sig-name descname"><span class="pre">getProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.getProperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current value of an engine property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the property to query.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value of the property at the time of this invocation.</p>
+</dd>
+</dl>
+<p>The following property names are valid for all drivers.</p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">rate</span></span></dt>
+<dd><p>Integer speech rate in words per minute. Defaults to 200 word per minute.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">voice</span></span></dt>
+<dd><p>String identifier of the active voice.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">voices</span></span></dt>
+<dd><p>List of <a class="reference internal" href="#pyttsx3.voice.Voice" title="pyttsx3.voice.Voice"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyttsx3.voice.Voice</span></code></a> descriptor objects.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">volume</span></span></dt>
+<dd><p>Floating point volume in the range of 0.0 to 1.0 inclusive. Defaults to 1.0.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.isBusy">
+<span class="sig-name descname"><span class="pre">isBusy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.isBusy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets if the engine is currently busy speaking an utterance or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if speaking, false if not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.runAndWait">
+<span class="sig-name descname"><span class="pre">runAndWait</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.runAndWait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks while processing all currently queued commands. Invokes callbacks for engine notifications appropriately. Returns when all commands queued before this call are emptied from the queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.say">
+<span class="sig-name descname"><span class="pre">say</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">unicode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.say" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queues a command to speak an utterance. The speech is output according to the properties set before this command in the queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Text to speak.</p></li>
+<li><p><strong>name</strong> – Name to associate with the utterance. Included in notifications about this utterance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.setProperty">
+<span class="sig-name descname"><span class="pre">setProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.setProperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queues a command to set an engine property. The new property value affects all utterances queued after this command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name of the property to change.</p></li>
+<li><p><strong>value</strong> – Value to set.</p></li>
+</ul>
+</dd>
+</dl>
+<p>The following property names are valid for all drivers.</p>
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">rate</span></span></dt>
+<dd><p>Integer speech rate in words per minute.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">voice</span></span></dt>
+<dd><p>String identifier of the active voice.</p>
+</dd></dl>
+
+<dl class="describe">
+<dt class="sig sig-object">
+<span class="sig-name descname"><span class="pre">volume</span></span></dt>
+<dd><p>Floating point volume in the range of 0.0 to 1.0 inclusive.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.startLoop">
+<span class="sig-name descname"><span class="pre">startLoop</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">useDriverLoop</span> <span class="pre">:</span> <span class="pre">bool</span></span></em><span class="optional">]</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.startLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts running an event loop during which queued commands are processed and notifications are fired.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>useDriverLoop</strong> – True to use the loop provided by the selected driver. False to indicate the caller will enter its own loop after invoking this method. The caller’s loop must pump events for the driver in use so that pyttsx3 notifications are delivered properly (e.g., SAPI5 requires a COM message pump). Defaults to True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.engine.Engine.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.engine.Engine.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the current utterance and clears the command queue.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyttsx3.voice">
+<span id="the-voice-metadata"></span><h2>The Voice metadata<a class="headerlink" href="#module-pyttsx3.voice" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyttsx3.voice.Voice">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyttsx3.voice.</span></span><span class="sig-name descname"><span class="pre">Voice</span></span><a class="headerlink" href="#pyttsx3.voice.Voice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains information about a speech synthesizer voice.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyttsx3.voice.Voice.age">
+<span class="sig-name descname"><span class="pre">age</span></span><a class="headerlink" href="#pyttsx3.voice.Voice.age" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integer age of the voice in years. Defaults to <code class="xref py py-const docutils literal notranslate"><span class="pre">None</span></code> if unknown.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyttsx3.voice.Voice.gender">
+<span class="sig-name descname"><span class="pre">gender</span></span><a class="headerlink" href="#pyttsx3.voice.Voice.gender" title="Permalink to this definition">¶</a></dt>
+<dd><p>String gender of the voice: <cite>male</cite>, <cite>female</cite>, or <cite>neutral</cite>. Defaults to <code class="xref py py-const docutils literal notranslate"><span class="pre">None</span></code> if unknown.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyttsx3.voice.Voice.id">
+<span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#pyttsx3.voice.Voice.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>String identifier of the voice. Used to set the active voice via <code class="xref py py-meth docutils literal notranslate"><span class="pre">pyttsx3.engine.Engine.setPropertyValue()</span></code>. This attribute is always defined.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyttsx3.voice.Voice.languages">
+<span class="sig-name descname"><span class="pre">languages</span></span><a class="headerlink" href="#pyttsx3.voice.Voice.languages" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of string languages supported by this voice. Defaults to an empty list of unknown.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyttsx3.voice.Voice.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pyttsx3.voice.Voice.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Human readable name of the voice. Defaults to <code class="xref py py-const docutils literal notranslate"><span class="pre">None</span></code> if unknown.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+<section id="speaking-text">
+<h3>Speaking text<a class="headerlink" href="#speaking-text" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyttsx3</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;Sally sells seashells by the seashore.&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="saving-voice-to-a-file">
+<h3>Saving voice to a file<a class="headerlink" href="#saving-voice-to-a-file" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyttsx3</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span> <span class="p">,</span> <span class="s1">&#39;test.mp3&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="listening-for-events">
+<h3>Listening for events<a class="headerlink" href="#listening-for-events" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyttsx3</span>
+<span class="k">def</span> <span class="nf">onStart</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+   <span class="nb">print</span> <span class="s1">&#39;starting&#39;</span><span class="p">,</span> <span class="n">name</span>
+<span class="k">def</span> <span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+   <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
+<span class="k">def</span> <span class="nf">onEnd</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">completed</span><span class="p">):</span>
+   <span class="nb">print</span> <span class="s1">&#39;finishing&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">completed</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-utterance&#39;</span><span class="p">,</span> <span class="n">onStart</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-word&#39;</span><span class="p">,</span> <span class="n">onWord</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;finished-utterance&#39;</span><span class="p">,</span> <span class="n">onEnd</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="interrupting-an-utterance">
+<h3>Interrupting an utterance<a class="headerlink" href="#interrupting-an-utterance" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyttsx3</span>
+<span class="k">def</span> <span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+   <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
+   <span class="k">if</span> <span class="n">location</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+      <span class="n">engine</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-word&#39;</span><span class="p">,</span> <span class="n">onWord</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="changing-voices">
+<h3>Changing voices<a class="headerlink" href="#changing-voices" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">voices</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">getProperty</span><span class="p">(</span><span class="s1">&#39;voices&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">voice</span> <span class="ow">in</span> <span class="n">voices</span><span class="p">:</span>
+   <span class="n">engine</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="s1">&#39;voice&#39;</span><span class="p">,</span> <span class="n">voice</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+   <span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="changing-speech-rate">
+<h3>Changing speech rate<a class="headerlink" href="#changing-speech-rate" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">rate</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">getProperty</span><span class="p">(</span><span class="s1">&#39;rate&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="s1">&#39;rate&#39;</span><span class="p">,</span> <span class="n">rate</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="changing-volume">
+<h3>Changing volume<a class="headerlink" href="#changing-volume" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">volume</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">getProperty</span><span class="p">(</span><span class="s1">&#39;volume&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="s1">&#39;volume&#39;</span><span class="p">,</span> <span class="n">volume</span><span class="o">-</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="running-a-driver-event-loop">
+<h3>Running a driver event loop<a class="headerlink" href="#running-a-driver-event-loop" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">onStart</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+   <span class="nb">print</span> <span class="s1">&#39;starting&#39;</span><span class="p">,</span> <span class="n">name</span>
+<span class="k">def</span> <span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+   <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
+<span class="k">def</span> <span class="nf">onEnd</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">completed</span><span class="p">):</span>
+   <span class="nb">print</span> <span class="s1">&#39;finishing&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">completed</span>
+   <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;fox&#39;</span><span class="p">:</span>
+      <span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;What a lazy dog!&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">)</span>
+   <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;dog&#39;</span><span class="p">:</span>
+      <span class="n">engine</span><span class="o">.</span><span class="n">endLoop</span><span class="p">()</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-utterance&#39;</span><span class="p">,</span> <span class="n">onStart</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-word&#39;</span><span class="p">,</span> <span class="n">onWord</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;finished-utterance&#39;</span><span class="p">,</span> <span class="n">onEnd</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">,</span> <span class="s1">&#39;fox&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">startLoop</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="using-an-external-event-loop">
+<h3>Using an external event loop<a class="headerlink" href="#using-an-external-event-loop" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">,</span> <span class="s1">&#39;fox&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">startLoop</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># engine.iterate() must be called inside externalLoop()</span>
+<span class="n">externalLoop</span><span class="p">()</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">endLoop</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../">py3-tts</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../support/">Supported synthesizers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Using py3-tts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-engine-factory">The Engine factory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyttsx3.engine">The Engine interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyttsx3.voice">The Voice metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/">Implementing drivers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/">Installing py3-tts</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../">Documentation overview</a><ul>
+      <li>Previous: <a href="../support/" title="previous chapter">Supported synthesizers</a></li>
+      <li>Next: <a href="../drivers/" title="next chapter">Implementing drivers</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Vignesh S Rao.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/engine.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

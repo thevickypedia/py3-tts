@@ -4,8 +4,8 @@ import time
 import wave
 from tempfile import NamedTemporaryFile
 
-from . import _espeak, toUtf8, fromUtf8
 from ..voice import Voice
+from . import _espeak, fromUtf8, toUtf8
 
 
 # noinspection PyPep8Naming

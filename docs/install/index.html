@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Installing py3-tts &#8212; py3-tts 3.3a documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="prev" title="Implementing drivers" href="../drivers/" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="installing-py3-tts">
+<h1>Installing py3-tts<a class="headerlink" href="#installing-py3-tts" title="Permalink to this heading">¶</a></h1>
+<section id="tested-versions">
+<h2>Tested versions<a class="headerlink" href="#tested-versions" title="Permalink to this heading">¶</a></h2>
+<p>Version 3.3a of py3-tts includes drivers for the following text-to-speech synthesizers. Only operating systems on which a driver is tested and known to work are listed. The drivers may work on other systems.</p>
+<ul class="simple">
+<li><p>SAPI5 on Windows XP, Windows Vista, Windows 7, and Windows 10</p></li>
+<li><p>NSSpeechSynthesizer on Mac OS X 10.5 (Leopard), 10.6 (Snow Leopard), 10.7 (Lion), and 10.8 (Mountain Lion).</p></li>
+<li><p><a class="reference external" href="http://espeak.sourceforge.net/">espeak</a> on 32-bit Ubuntu Desktop Edition 8.10 (Intrepid), 9.04 (Jaunty), 9.10 (Karmic), and 12.04 (Precise).</p></li>
+</ul>
+<p>The <a class="reference internal" href="../engine/#pyttsx3.init" title="pyttsx3.init"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyttsx3.init()</span></code></a> documentation explains how to select a specific synthesizer by name as well as the default for each platform.</p>
+</section>
+<section id="using-pip-to-install-system-wide">
+<h2>Using pip to install system-wide<a class="headerlink" href="#using-pip-to-install-system-wide" title="Permalink to this heading">¶</a></h2>
+<p>If you have pip installed, you can use it to install py3-tts in the system site-packages folder.</p>
+<section id="on-windows">
+<h3>On Windows<a class="headerlink" href="#on-windows" title="Permalink to this heading">¶</a></h3>
+<p>First install the <a class="reference external" href="http://sourceforge.net/projects/pywin32/files/pywin32/">pywin32-extensions</a> package using its Windows installer. Then use pip to install py3-tts.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>py3-tts
+</pre></div>
+</div>
+</section>
+<section id="on-osx-or-linux">
+<h3>On OSX or Linux<a class="headerlink" href="#on-osx-or-linux" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>py3-tts
+</pre></div>
+</div>
+</section>
+</section>
+<section id="using-pip-to-install-in-a-virtualenv">
+<h2>Using pip to install in a virtualenv<a class="headerlink" href="#using-pip-to-install-in-a-virtualenv" title="Permalink to this heading">¶</a></h2>
+<p>If you have <a class="reference external" href="https://pypi.python.org/pypi/virtualenv/1.10.1">virtualenv</a> installed with <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>, you can use pip to install a copy of pyttsx3 in the virtual environment folder.</p>
+<section id="id1">
+<h3>On Windows<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<p>You’ll need to install the <a class="reference external" href="http://sourceforge.net/projects/pywin32/files/pywin32/">pywin32-extensions</a> package system-wide using its Windows installer. Then you’ll need to give your virtualenv access to the system site-packages in order to install py3-tts.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>virtualenv<span class="w"> </span>--system-site-packages<span class="w"> </span>myproj
+New<span class="w"> </span>python<span class="w"> </span>executable<span class="w"> </span><span class="k">in</span><span class="w"> </span>myproj/bin/python
+Installing<span class="w"> </span>setuptools............done.
+Installing<span class="w"> </span>pip...............done.
+$<span class="w"> </span>myproj<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+<span class="o">(</span>myproj<span class="o">)</span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>py3-tts
+</pre></div>
+</div>
+</section>
+<section id="on-osx">
+<h3>On OSX<a class="headerlink" href="#on-osx" title="Permalink to this heading">¶</a></h3>
+<p>Unless you wish to compile your own version of pyobjc (a lengthy process), you will need to give your virtualenv access to the system site-packages folder.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>virtualenv<span class="w"> </span>--system-site-packages<span class="w"> </span>myproj
+New<span class="w"> </span>python<span class="w"> </span>executable<span class="w"> </span><span class="k">in</span><span class="w"> </span>myproj/bin/python
+Installing<span class="w"> </span>setuptools............done.
+Installing<span class="w"> </span>pip...............done.
+$<span class="w"> </span>.<span class="w"> </span>myproj/bin/activate
+<span class="o">(</span>myproj<span class="o">)</span>$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>py3-tts
+...
+Successfully<span class="w"> </span>installed<span class="w"> </span>pyttsx3
+Cleaning<span class="w"> </span>up...
+</pre></div>
+</div>
+</section>
+<section id="on-linux">
+<h3>On Linux<a class="headerlink" href="#on-linux" title="Permalink to this heading">¶</a></h3>
+<p>pyttsx3 requires no Python dependencies on Linux. You can cut-off the pyttsx3 virtualenv from the system site-packages.</p>
+<p>code-block:: bash</p>
+<blockquote>
+<div><p>$ virtualenv –no-site-packages myproj
+New python executable in myproj/bin/python
+Installing setuptools…………done.
+Installing pip……………done.
+$ . myproj/bin/activate
+(myproj)$ pip install py3-tts
+…
+Successfully installed pyttsx3
+Cleaning up…</p>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../">py3-tts</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../support/">Supported synthesizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../engine/">Using py3-tts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers/">Implementing drivers</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installing py3-tts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tested-versions">Tested versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-pip-to-install-system-wide">Using pip to install system-wide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-pip-to-install-in-a-virtualenv">Using pip to install in a virtualenv</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../">Documentation overview</a><ul>
+      <li>Previous: <a href="../drivers/" title="previous chapter">Implementing drivers</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Vignesh S Rao.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/install.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

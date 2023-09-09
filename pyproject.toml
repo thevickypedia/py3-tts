@@ -39,5 +39,5 @@ build-backend = "setuptools.build_meta"
 
 [project.urls]
 Homepage = "https://github.com/thevickypedia/py3-tts"
-Docs = "https://pyttsx3.readthedocs.org/"
 Source = "https://github.com/thevickypedia/py3-tts"
+Docs = "https://py3-tts.vigneshrao.com"

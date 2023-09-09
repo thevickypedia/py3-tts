@@ -11,13 +11,15 @@ except ImportError:
     from comtypes.gen import SpeechLib
 
 # noinspection PyUnresolvedReferences
-import pythoncom
-import time
 import math
 import os
+import time
 import weakref
+
+import pythoncom
+
 from ..voice import Voice
-from . import toUtf8, fromUtf8
+from . import fromUtf8, toUtf8
 
 # common voices
 MSSAM = 'HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Speech\\Voices\\Tokens\\MSSam'

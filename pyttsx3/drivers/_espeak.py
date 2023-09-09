@@ -1,8 +1,9 @@
 from __future__ import print_function
 
 import time
-from ctypes import CFUNCTYPE, Structure, Union, c_wchar, c_ubyte, c_ulong
-from ctypes import cdll, c_int, c_char_p, POINTER, c_short, c_uint, c_long, c_void_p
+from ctypes import (CFUNCTYPE, POINTER, Structure, Union, c_char_p, c_int,
+                    c_long, c_short, c_ubyte, c_uint, c_ulong, c_void_p,
+                    c_wchar, cdll)
 
 
 def cfunc(name, dll, result, *args):

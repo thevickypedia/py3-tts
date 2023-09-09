@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Implementing drivers &#8212; py3-tts 3.3a documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex/" />
+    <link rel="search" title="Search" href="../search/" />
+    <link rel="next" title="Installing py3-tts" href="../install/" />
+    <link rel="prev" title="Using py3-tts" href="../engine/" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="implementing-drivers">
+<h1>Implementing drivers<a class="headerlink" href="#implementing-drivers" title="Permalink to this heading">¶</a></h1>
+<p>You can implement new drivers for the <code class="xref py py-mod docutils literal notranslate"><span class="pre">pyttsx3.Engine</span></code> by:</p>
+<ol class="arabic simple">
+<li><p>Creating a Python module with the name of your new driver.</p></li>
+<li><p>Implementing the required driver factory function and class in your module.</p></li>
+<li><p>Using methods on a <a class="reference internal" href="#pyttsx3.driver.DriverProxy" title="pyttsx3.driver.DriverProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyttsx3.driver.DriverProxy</span></code></a> instance provided by the <code class="xref py py-class docutils literal notranslate"><span class="pre">pyttsx3.Engine</span></code> to control the event queue and notify applications about events.</p></li>
+</ol>
+<section id="the-driver-interface">
+<h2>The Driver interface<a class="headerlink" href="#the-driver-interface" title="Permalink to this heading">¶</a></h2>
+<p>All drivers must implement the following factory function and driver interface.</p>
+<span class="target" id="module-pyttsx3.drivers"></span><dl class="py function">
+<dt class="sig sig-object py" id="pyttsx3.drivers.buildDriver">
+<span class="sig-prename descclassname"><span class="pre">pyttsx3.drivers.</span></span><span class="sig-name descname"><span class="pre">buildDriver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proxy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyttsx3.driver.DriverProxy" title="pyttsx3.driver.DriverProxy"><span class="pre">pyttsx3.driver.DriverProxy</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyttsx3.drivers.DriverDelegate" title="pyttsx3.drivers.DriverDelegate"><span class="pre">pyttsx3.drivers.DriverDelegate</span></a></span></span><a class="headerlink" href="#pyttsx3.drivers.buildDriver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiates delegate subclass declared in this module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>proxy</strong> – Proxy instance provided by a <code class="xref py py-class docutils literal notranslate"><span class="pre">pyttsx3.Engine</span></code> instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyttsx3.drivers.DriverDelegate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyttsx3.drivers.</span></span><span class="sig-name descname"><span class="pre">DriverDelegate</span></span><a class="headerlink" href="#pyttsx3.drivers.DriverDelegate" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <a class="reference internal" href="#pyttsx3.drivers.DriverDelegate" title="pyttsx3.drivers.DriverDelegate"><code class="xref py py-class docutils literal notranslate"><span class="pre">DriverDelegate</span></code></a> class is not actually declared in <a class="reference internal" href="#module-pyttsx3.drivers" title="pyttsx3.drivers: The package containing the available driver implementations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyttsx3.drivers</span></code></a> and cannot serve as a base class. It is only here for the purpose of documenting the interface all drivers must implement.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.drivers.DriverDelegate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proxy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pyttsx3.drivers.DriverProxy</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.drivers.DriverDelegate.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructor. Must store the proxy reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>proxy</strong> – Proxy instance provided by the <a class="reference internal" href="#pyttsx3.drivers.buildDriver" title="pyttsx3.drivers.buildDriver"><code class="xref py py-func docutils literal notranslate"><span class="pre">buildDriver()</span></code></a> function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.drivers.DriverDelegate.destroy">
+<span class="sig-name descname"><span class="pre">destroy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyttsx3.drivers.DriverDelegate.destroy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optional. Invoked by the <a class="reference internal" href="#pyttsx3.driver.DriverProxy" title="pyttsx3.driver.DriverProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyttsx3.driver.DriverProxy</span></code></a> when it is being destroyed so this delegate can clean up any synthesizer resources. If not implemented, the proxy proceeds safely.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.drivers.DriverDelegate.endLoop">
+<span class="sig-name descname"><span class="pre">endLoop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.drivers.DriverDelegate.endLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Immediately ends a running driver event loop.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.drivers.DriverDelegate.getProperty">
+<span class="sig-name descname"><span class="pre">getProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#pyttsx3.drivers.DriverDelegate.getProperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Immediately gets the named property value. At least those properties listed in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">pyttsx3.Engine.getProperty()</span></code> documentation must be supported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the property to query.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value of the property at the time of this invocation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.drivers.DriverDelegate.say">
+<span class="sig-name descname"><span class="pre">say</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">unicode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.drivers.DriverDelegate.say" title="Permalink to this definition">¶</a></dt>
+<dd><p>Immediately speaks an utterance. The speech must be output according to the current property values applied at the time of this invocation. Before this method returns, it must invoke <a class="reference internal" href="#pyttsx3.driver.DriverProxy.setBusy" title="pyttsx3.driver.DriverProxy.setBusy"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pyttsx3.driver.DriverProxy.setBusy()</span></code></a> with value <code class="xref py py-const docutils literal notranslate"><span class="pre">True</span></code> to stall further processing of the command queue until the output completes or is interrupted.</p>
+<p>This method must trigger one and only one <cite>started-utterance</cite> notification when output begins, one <cite>started-word</cite> notification at the start of each word in the utterance, and a <cite>finished-utterance</cite> notification when output completes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Text to speak.</p></li>
+<li><p><strong>name</strong> – Name to associate with the utterance. Included in notifications about this utterance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.drivers.DriverDelegate.setProperty">
+<span class="sig-name descname"><span class="pre">setProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.drivers.DriverDelegate.setProperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Immediately sets the named property value. At least those properties listed in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">pyttsx3.Engine.setProperty()</span></code> documentation must be supported. After setting the property, the driver must invoke <a class="reference internal" href="#pyttsx3.driver.DriverProxy.setBusy" title="pyttsx3.driver.DriverProxy.setBusy"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pyttsx3.driver.DriverProxy.setBusy()</span></code></a> with value <code class="xref py py-const docutils literal notranslate"><span class="pre">False</span></code> to pump the command queue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name of the property to change.</p></li>
+<li><p><strong>value</strong> – Value to set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.drivers.DriverDelegate.startLoop">
+<span class="sig-name descname"><span class="pre">startLoop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyttsx3.drivers.DriverDelegate.startLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Immediately starts an event loop. The loop is responsible for sending notifications about utterances and pumping the command queue by using methods on the <a class="reference internal" href="#pyttsx3.driver.DriverProxy" title="pyttsx3.driver.DriverProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyttsx3.driver.DriverProxy</span></code></a> object given to the factory function that created this object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.drivers.DriverDelegate.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyttsx3.drivers.DriverDelegate.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Immediately stops the current utterance output. This method must trigger a <cite>finished-utterance</cite> notification if called during on-going output. It must trigger no notification if there is no ongoing output.</p>
+<p>After stopping the output and sending any required notification, the driver must invoke <a class="reference internal" href="#pyttsx3.driver.DriverProxy.setBusy" title="pyttsx3.driver.DriverProxy.setBusy"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pyttsx3.driver.DriverProxy.setBusy()</span></code></a> with value <code class="xref py py-const docutils literal notranslate"><span class="pre">False</span></code> to pump the command queue.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pyttsx3.driver">
+<span id="the-driverproxy-interface"></span><h2>The DriverProxy interface<a class="headerlink" href="#module-pyttsx3.driver" title="Permalink to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="#pyttsx3.drivers.buildDriver" title="pyttsx3.drivers.buildDriver"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyttsx3.drivers.buildDriver()</span></code></a> factory receives an instance of a <a class="reference internal" href="#pyttsx3.driver.DriverProxy" title="pyttsx3.driver.DriverProxy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DriverProxy</span></code></a> class and provides it to the <a class="reference internal" href="#pyttsx3.drivers.DriverDelegate" title="pyttsx3.drivers.DriverDelegate"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyttsx3.drivers.DriverDelegate</span></code></a> it constructs. The driver delegate can invoke the following public methods on the proxy instance. All other public methods found in the code are reserved for use by an <code class="xref py py-class docutils literal notranslate"><span class="pre">pyttsx3.Engine</span></code> instance.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyttsx3.driver.DriverProxy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyttsx3.driver.</span></span><span class="sig-name descname"><span class="pre">DriverProxy</span></span><a class="headerlink" href="#pyttsx3.driver.DriverProxy" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.driver.DriverProxy.isBusy">
+<span class="sig-name descname"><span class="pre">isBusy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyttsx3.driver.DriverProxy.isBusy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets if the proxy is busy and cannot process the next command in the queue or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True means busy, False means idle.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.driver.DriverProxy.notify">
+<span class="sig-name descname"><span class="pre">notify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.driver.DriverProxy.notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fires a notification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>topic</strong> – The name of the notification.</p>
+</dd>
+<dt class="field-even">Kwargs<span class="colon">:</span></dt>
+<dd class="field-even"><p>Name/value pairs associated with the topic.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyttsx3.driver.DriverProxy.setBusy">
+<span class="sig-name descname"><span class="pre">setBusy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">busy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyttsx3.driver.DriverProxy.setBusy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the proxy to busy so it cannot continue to pump the command queue or idle so it can process the next command.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>busy</strong> – True to set busy, false to set idle</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../">py3-tts</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../support/">Supported synthesizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../engine/">Using py3-tts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Implementing drivers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-driver-interface">The Driver interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyttsx3.driver">The DriverProxy interface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../install/">Installing py3-tts</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../">Documentation overview</a><ul>
+      <li>Previous: <a href="../engine/" title="previous chapter">Using py3-tts</a></li>
+      <li>Next: <a href="../install/" title="next chapter">Installing py3-tts</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Vignesh S Rao.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/drivers.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -101,10 +101,6 @@ engine.runAndWait()
 
 ```
 
-### Full documentation of the Library
-
-https://pyttsx3.readthedocs.io/en/latest/
-
 #### Included TTS engines
 
 * sapi5
@@ -117,7 +113,7 @@ Feel free to wrap another text-to-speech engine for use with ``pyttsx3``.
 
 * PyPI (https://pypi.org/project/py3-tts/)
 * GitHub (https://github.com/thevickypedia/py3-tts)
-* Full Documentation (https://pyttsx3.readthedocs.org)
+* Full Documentation (https://py3-tts.vigneshrao.com/)
 
 ### Credits
 
