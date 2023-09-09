@@ -2,7 +2,7 @@ import weakref
 
 from .engine import Engine
 
-version = '3.3a'
+version = '3.3b'
 _activeEngines = weakref.WeakValueDictionary()
 
 
