@@ -24,14 +24,14 @@ First install the `pywin32-extensions <http://sourceforge.net/projects/pywin32/f
 
 .. code-block:: bash
 
-   $ pip install py3-tts
+    $ pip install py3-tts
 
 On OSX or Linux
 ###############
 
 .. code-block:: bash
 
-   $ sudo pip install py3-tts
+    $ sudo pip install py3-tts
 
 Using pip to install in a virtualenv
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -45,12 +45,12 @@ You'll need to install the `pywin32-extensions <http://sourceforge.net/projects/
 
 .. code-block:: bash
 
-   $ virtualenv --system-site-packages myproj
-   New python executable in myproj/bin/python
-   Installing setuptools............done.
-   Installing pip...............done.
-   $ myproj\Scripts\activate
-   (myproj)$ pip install py3-tts
+    $ virtualenv --system-site-packages myproj
+    New python executable in myproj/bin/python
+    Installing setuptools............done.
+    Installing pip...............done.
+    $ myproj\Scripts\activate
+    (myproj)$ pip install py3-tts
 
 On OSX
 ######
@@ -59,15 +59,15 @@ Unless you wish to compile your own version of pyobjc (a lengthy process), you w
 
 .. code-block:: bash
 
-   $ virtualenv --system-site-packages myproj
-   New python executable in myproj/bin/python
-   Installing setuptools............done.
-   Installing pip...............done.
-   $ . myproj/bin/activate
-   (myproj)$ pip install py3-tts
-   ...
-   Successfully installed py3-tts
-   Cleaning up...
+    $ virtualenv --system-site-packages myproj
+    New python executable in myproj/bin/python
+    Installing setuptools............done.
+    Installing pip...............done.
+    $ . myproj/bin/activate
+    (myproj)$ pip install py3-tts
+    ...
+    Successfully installed py3-tts
+    Cleaning up...
 
 On Linux
 ########
@@ -76,15 +76,15 @@ pyttsx3 requires no Python dependencies on Linux. You can cut-off the pyttsx3 vi
 
 .. code-block:: bash
 
-   $ virtualenv --no-site-packages myproj
-   New python executable in myproj/bin/python
-   Installing setuptools............done.
-   Installing pip...............done.
-   $ . myproj/bin/activate
-   (myproj)$ pip install py3-tts
-   ...
-   Successfully installed py3-tts
-   Cleaning up...
+    $ virtualenv --no-site-packages myproj
+    New python executable in myproj/bin/python
+    Installing setuptools............done.
+    Installing pip...............done.
+    $ . myproj/bin/activate
+    (myproj)$ pip install py3-tts
+    ...
+    Successfully installed py3-tts
+    Cleaning up...
 
 
 .. _espeak: http://espeak.sourceforge.net/

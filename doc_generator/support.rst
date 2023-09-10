@@ -1,4 +1,4 @@
-Supported synthesizers
+Supported Synthesizers
 ----------------------
 
 Version |version| of py3-tts includes drivers for the following text-to-speech synthesizers. Only operating systems on which a driver is tested and known to work are listed. The drivers may work on other systems.

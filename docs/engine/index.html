@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex/" />
     <link rel="search" title="Search" href="../search/" />
     <link rel="next" title="Implementing drivers" href="../drivers/" />
-    <link rel="prev" title="Supported synthesizers" href="../support/" />
+    <link rel="prev" title="Supported Synthesizers" href="../support/" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -369,16 +369,16 @@
 <h3>Listening for events<a class="headerlink" href="#listening-for-events" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyttsx3</span>
 <span class="k">def</span> <span class="nf">onStart</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-   <span class="nb">print</span> <span class="s1">&#39;starting&#39;</span><span class="p">,</span> <span class="n">name</span>
+    <span class="nb">print</span> <span class="s1">&#39;starting&#39;</span><span class="p">,</span> <span class="n">name</span>
 <span class="k">def</span> <span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-   <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
+    <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
 <span class="k">def</span> <span class="nf">onEnd</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">completed</span><span class="p">):</span>
-   <span class="nb">print</span> <span class="s1">&#39;finishing&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">completed</span>
+    <span class="nb">print</span> <span class="s1">&#39;finishing&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">completed</span>
 <span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-utterance&#39;</span><span class="p">,</span> <span class="n">onStart</span><span class="p">)</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-word&#39;</span><span class="p">,</span> <span class="n">onWord</span><span class="p">)</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;finished-utterance&#39;</span><span class="p">,</span> <span class="n">onEnd</span><span class="p">)</span>
-<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">,</span> <span class="s1">&#39;fox&#39;</span><span class="p">)</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -387,12 +387,12 @@
 <h3>Interrupting an utterance<a class="headerlink" href="#interrupting-an-utterance" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyttsx3</span>
 <span class="k">def</span> <span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-   <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
-   <span class="k">if</span> <span class="n">location</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
-      <span class="n">engine</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+    <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
+    <span class="k">if</span> <span class="n">location</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+        <span class="n">engine</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 <span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-word&#39;</span><span class="p">,</span> <span class="n">onWord</span><span class="p">)</span>
-<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
+<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">,</span> <span class="s1">&#39;fox&#39;</span><span class="p">)</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -402,8 +402,8 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 <span class="n">voices</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">getProperty</span><span class="p">(</span><span class="s1">&#39;voices&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">voice</span> <span class="ow">in</span> <span class="n">voices</span><span class="p">:</span>
-   <span class="n">engine</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="s1">&#39;voice&#39;</span><span class="p">,</span> <span class="n">voice</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-   <span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="s1">&#39;voice&#39;</span><span class="p">,</span> <span class="n">voice</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -432,15 +432,15 @@
 <h3>Running a driver event loop<a class="headerlink" href="#running-a-driver-event-loop" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">onStart</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-   <span class="nb">print</span> <span class="s1">&#39;starting&#39;</span><span class="p">,</span> <span class="n">name</span>
+    <span class="nb">print</span> <span class="s1">&#39;starting&#39;</span><span class="p">,</span> <span class="n">name</span>
 <span class="k">def</span> <span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
-   <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
+    <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
 <span class="k">def</span> <span class="nf">onEnd</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">completed</span><span class="p">):</span>
-   <span class="nb">print</span> <span class="s1">&#39;finishing&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">completed</span>
-   <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;fox&#39;</span><span class="p">:</span>
-      <span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;What a lazy dog!&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">)</span>
-   <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;dog&#39;</span><span class="p">:</span>
-      <span class="n">engine</span><span class="o">.</span><span class="n">endLoop</span><span class="p">()</span>
+    <span class="nb">print</span> <span class="s1">&#39;finishing&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">completed</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;fox&#39;</span><span class="p">:</span>
+        <span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;What a lazy dog!&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;dog&#39;</span><span class="p">:</span>
+        <span class="n">engine</span><span class="o">.</span><span class="n">endLoop</span><span class="p">()</span>
 <span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-utterance&#39;</span><span class="p">,</span> <span class="n">onStart</span><span class="p">)</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-word&#39;</span><span class="p">,</span> <span class="n">onWord</span><span class="p">)</span>
@@ -482,7 +482,7 @@
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../support/">Supported synthesizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../support/">Supported Synthesizers</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Using py3-tts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-engine-factory">The Engine factory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-pyttsx3.engine">The Engine interface</a></li>
@@ -498,7 +498,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../">Documentation overview</a><ul>
-      <li>Previous: <a href="../support/" title="previous chapter">Supported synthesizers</a></li>
+      <li>Previous: <a href="../support/" title="previous chapter">Supported Synthesizers</a></li>
       <li>Next: <a href="../drivers/" title="next chapter">Implementing drivers</a></li>
   </ul></li>
 </ul>

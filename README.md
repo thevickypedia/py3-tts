@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/thevickypedia/py3-tts/master/.github/logo.svg?sanitize=true" width="200px" height="200px">
+  <img src="https://raw.githubusercontent.com/thevickypedia/py3-tts/master/.github/logo.png?sanitize=true" width="200px" height="200px">
 </p>
 <h2 align="center">Offline Text To Speech (TTS) converter for Python </h2>
 
