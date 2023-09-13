@@ -1,3 +1,5 @@
+import time
+
 # noinspection PyUnresolvedReferences
 from AppKit import NSSpeechSynthesizer
 from Foundation import *
@@ -141,6 +143,8 @@ class NSSpeechDriver(NSObject):
     def save_to_file(self, text, filename):
         url = Foundation.NSURL.fileURLWithPath_(filename)
         self._tts.startSpeakingString_toURL_(text, url)
+        # waits (for 1% of the length of text) the system to finish writing to the file system before continuing
+        time.sleep(max(1.0, len(text) * 0.01))
 
     def speechSynthesizer_didFinishSpeaking_(self, tts, success):
         if not self._completed:
