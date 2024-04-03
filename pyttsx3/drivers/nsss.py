@@ -1,6 +1,7 @@
 # noinspection PyUnresolvedReferences
+import objc
 from AppKit import NSSpeechSynthesizer
-from Foundation import *
+from Foundation import NSObject
 from PyObjCTools import AppHelper
 # noinspection PyProtectedMember
 from PyObjCTools.AppHelper import PyObjCAppHelperRunLoopStopper
