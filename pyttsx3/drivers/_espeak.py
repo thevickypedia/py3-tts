@@ -18,7 +18,16 @@ def cfunc(name, dll, result, *args):
 
 dll = None
 
+def load_macos_espeak():
+    global dll
+    try:
+        dll = cdll.LoadLibrary('/usr/local/lib/libespeak.dylib')
+    except Exception:
+        return False
+    else:
+        return True
 
+    
 def load_linux_ep():
     global dll
     try:
@@ -80,7 +89,7 @@ def load_windows_epng3():
 
 
 try:
-    load_linux_ep() or load_linux_epng() or load_linux_epng2() or load_windows_epng1() or load_windows_epng2() or load_windows_epng3()
+    load_linux_epng2() or load_linux_ep() or load_linux_epng() or load_linux_epng2() or load_windows_epng1() or load_windows_epng2() or load_windows_epng3()
 except Exception as exp:
     print("Exception: " + str(exp) + "\n")
     raise RuntimeError("This means you probably do not have eSpeak or eSpeak-ng installed!")
