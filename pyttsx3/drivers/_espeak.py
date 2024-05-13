@@ -89,7 +89,8 @@ def load_windows_epng3():
 
 
 try:
-    load_linux_epng2() or load_linux_ep() or load_linux_epng() or load_linux_epng2() or load_windows_epng1() or load_windows_epng2() or load_windows_epng3()
+    load_macos_espeak() or load_linux_epng2() or load_linux_ep() or load_linux_epng() or load_linux_epng2() or load_windows_epng1() or load_windows_epng2() or load_windows_epng3()
+    print(f"Loaded {dll}")
 except Exception as exp:
     print("Exception: " + str(exp) + "\n")
     raise RuntimeError("This means you probably do not have eSpeak or eSpeak-ng installed!")
