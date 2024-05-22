@@ -175,5 +175,4 @@ class SAPI5DriverEventSink(object):
         
     def _ISpeechVoiceEvents_Word(self, stream_number, stream_position, char, length):
         self._driver._proxy.notify(
-            'started-word', location=char, length=length
-       )
+            'started-word', location=char, length=length)
