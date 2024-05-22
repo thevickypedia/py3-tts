@@ -64,7 +64,7 @@ class SAPI5Driver(object):
         # call this async otherwise this blocks the callbacks
         # see SpeechVoiceSpeakFlags: https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms720892%28v%3dvs.85%29
         # and Speak : https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms723609(v=vs.85)
-        self._tts.Speak(fromUtf8(toUtf8(text)), 1) # -> stream_number as described in the remarks of the documentation
+        self._tts.Speak(fromUtf8(toUtf8(text)), 1)  # -> stream_number as described in the remarks of the documentation
 
     def stop(self):
         if not self._speaking:
@@ -175,4 +175,5 @@ class SAPI5DriverEventSink(object):
         
     def _ISpeechVoiceEvents_Word(self, stream_number, stream_position, char, length):
         self._driver._proxy.notify(
-            'started-word', location=char, length=length)
+            'started-word', location=char, length=length
+)
