@@ -1,4 +1,5 @@
 # noinspection PyUnresolvedReferences
+import objc
 from AppKit import NSSpeechSynthesizer
 from Foundation import *
 from PyObjCTools import AppHelper
