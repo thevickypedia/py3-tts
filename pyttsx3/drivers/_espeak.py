@@ -41,7 +41,7 @@ def load_library():
             dll = cdll.LoadLibrary(path)
             return True
         except Exception as e:
-            print(f"Failed to load: {path}, Exception: {str(e)}")
+            return False
     return False
 
 try:
