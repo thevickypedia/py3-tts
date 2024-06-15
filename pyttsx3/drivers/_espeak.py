@@ -32,8 +32,9 @@ def load_library():
         
         # Windows paths
         'libespeak-ng.dll',
-        'C:\\Program Files\\eSpeak NG\\libespeak-ng.dll',
-        'C:\\Program Files (x86)\\eSpeak NG\\libespeak-ng.dll'
+        # Windows paths
+        r'C:\Program Files\eSpeak NG\libespeak-ng.dll',
+        r'C:\Program Files (x86)\eSpeak NG\libespeak-ng.dll'
     ]
     
     for path in paths:

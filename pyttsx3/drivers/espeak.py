@@ -183,7 +183,6 @@ class EspeakDriver(object):
                     elif platform.system() == 'Linux':
                         os.system(f'aplay {stream.name} -q')
                     elif platform.system() == 'Windows':
-                        print(f"Playing sound on Windows... {stream.name}")
                         winsound.PlaySound(stream.name, winsound.SND_FILENAME)
                     else:
                         raise RuntimeError("Unsupported operating system for audio playback")
