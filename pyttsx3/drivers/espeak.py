@@ -166,34 +166,42 @@ class EspeakDriver(object):
                                    location=event.text_position - 1,
                                    length=event.length)
             elif event.type == _espeak.EVENT_MSG_TERMINATED:
-                stream = NamedTemporaryFile()
-
-                with wave.open(stream, 'wb') as f:
-                    f.setnchannels(1)
-                    f.setsampwidth(2)
-                    f.setframerate(22050.0)
-                    f.writeframes(self._data_buffer)
-
-                if event.user_data:
-                    os.system(
-                        'ffmpeg -y -i {} {} -loglevel quiet'.format(stream.name, self.decode_numeric(event.user_data)))
-                else:
-                    if platform.system() == 'Darwin':  # macOS
-                        os.system(f'afplay {stream.name}')
-                    elif platform.system() == 'Linux':
-                        os.system(f'aplay {stream.name} -q')
-                    elif platform.system() == 'Windows':
-                        print(f"Playing sound on Windows... {stream.name}")
-                        winsound.PlaySound(stream.name, winsound.SND_FILENAME)
+                stream = NamedTemporaryFile(delete=False, suffix='.wav')
+    
+                try:
+                    with wave.open(stream, 'wb') as f:
+                        f.setnchannels(1)
+                        f.setsampwidth(2)
+                        f.setframerate(22050.0)
+                        f.writeframes(self._data_buffer)
+    
+                    if event.user_data:
+                        os.system(
+                            f'ffmpeg -y -i {stream.name} {self.decode_numeric(event.user_data)} -loglevel quiet')
                     else:
-                        raise RuntimeError("Unsupported operating system for audio playback")
-
+                        if platform.system() == 'Darwin':  # macOS
+                            os.system(f'afplay {stream.name}')
+                        elif platform.system() == 'Linux':
+                            os.system(f'aplay {stream.name} -q')
+                        elif platform.system() == 'Windows':
+                            winsound.PlaySound(stream.name, winsound.SND_FILENAME)
+                        else:
+                            raise RuntimeError("Unsupported operating system for audio playback")
+    
+                except Exception as e:
+                    raise RuntimeError(f"Error during playback: {e}")
+                
+                finally:
+                    try:
+                        os.remove(stream.name)
+                    except Exception as e:
+                        raise RuntimeError(f"Error deleting temporary WAV file: {e}")
+    
                 self._data_buffer = b''
                 self._proxy.notify('finished-utterance', completed=True)
                 self._proxy.setBusy(False)
             i += 1
-
+    
         if numsamples > 0:
-            self._data_buffer += ctypes.string_at(wav, numsamples *
-                                                  ctypes.sizeof(ctypes.c_short))
+            self._data_buffer += ctypes.string_at(wav, numsamples * ctypes.sizeof(ctypes.c_short))
         return 0
