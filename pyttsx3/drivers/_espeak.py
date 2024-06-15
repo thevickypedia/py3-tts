@@ -31,8 +31,6 @@ def load_library():
         'libespeak.so.1',
         
         # Windows paths
-        'libespeak-ng.dll',
-        # Windows paths
         r'C:\Program Files\eSpeak NG\libespeak-ng.dll',
         r'C:\Program Files (x86)\eSpeak NG\libespeak-ng.dll'
     ]
@@ -41,17 +39,16 @@ def load_library():
         try:
             dll = cdll.LoadLibrary(path)
             return True
-        except Exception as e:
-            return False
+        except Exception:
+            continue  # Try the next path
     return False
 
 try:
     if not load_library():
         raise RuntimeError("This means you probably do not have eSpeak or eSpeak-ng installed!")
 except Exception as exp:
-    print("Exception: " + str(exp) + "\n")
     raise
-
+    
 # constants and such from speak_lib.h
 
 EVENT_LIST_TERMINATED = 0
