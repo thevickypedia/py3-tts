@@ -1,8 +1,11 @@
-import ctypes
 import os
-import time
 import wave
+import platform
+import ctypes
+import time
 from tempfile import NamedTemporaryFile
+if platform.system() == 'Windows':
+    import winsound
 
 from ..voice import Voice
 from . import _espeak, fromUtf8, toUtf8
@@ -175,7 +178,14 @@ class EspeakDriver(object):
                     os.system(
                         'ffmpeg -y -i {} {} -loglevel quiet'.format(stream.name, self.decode_numeric(event.user_data)))
                 else:
-                    os.system('aplay {} -q'.format(stream.name))  # -q for quiet
+                    if platform.system() == 'Darwin':  # macOS
+                        os.system(f'afplay {stream.name}')
+                    elif platform.system() == 'Linux':
+                        os.system(f'aplay {stream.name} -q')
+                    elif platform.system() == 'Windows':
+                        winsound.PlaySound(stream.name, winsound.SND_FILENAME)
+                    else:
+                        raise RuntimeError("Unsupported operating system for audio playback")
 
                 self._data_buffer = b''
                 self._proxy.notify('finished-utterance', completed=True)

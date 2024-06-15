@@ -18,81 +18,38 @@ def cfunc(name, dll, result, *args):
 
 dll = None
 
-def load_macos_espeak():
+def load_library():
     global dll
-    try:
-        dll = cdll.LoadLibrary('/usr/local/lib/libespeak.dylib')
-    except Exception:
-        return False
-    else:
-        return True
-
+    paths = [
+        # macOS paths
+        '/usr/local/lib/libespeak-ng.1.dylib',
+        '/usr/local/lib/libespeak.dylib',
+        
+        # Linux paths
+        'libespeak-ng.so.1',
+        '/usr/local/lib/libespeak-ng.so.1',
+        'libespeak.so.1',
+        
+        # Windows paths
+        'libespeak-ng.dll',
+        'C:\\Program Files\\eSpeak NG\\libespeak-ng.dll',
+        'C:\\Program Files (x86)\\eSpeak NG\\libespeak-ng.dll'
+    ]
     
-def load_linux_ep():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('libespeak.so.1')
-    except Exception:
-        return False
-    else:
-        return True
-
-
-def load_linux_epng():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('libespeak-ng.so.1')
-    except Exception:
-        return False
-    else:
-        return True
-
-
-def load_linux_epng2():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('/usr/local/lib/libespeak-ng.so.1')
-    except Exception:
-        return False
-    else:
-        return True
-
-
-def load_windows_epng1():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('libespeak-ng.dll')
-    except Exception:
-        return False
-    else:
-        return True
-
-
-def load_windows_epng2():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('C:\\Program Files\\eSpeak NG\\libespeak-ng.dll')
-    except Exception:
-        return False
-    else:
-        return True
-
-
-def load_windows_epng3():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('C:\\Program Files (x86)\\eSpeak NG\\libespeak-ng.dll')
-    except Exception:
-        return False
-    else:
-        return True
-
+    for path in paths:
+        try:
+            dll = cdll.LoadLibrary(path)
+            return True
+        except Exception as e:
+            print(f"Failed to load: {path}, Exception: {str(e)}")
+    return False
 
 try:
-    load_macos_espeak() or load_linux_epng2() or load_linux_ep() or load_linux_epng() or load_windows_epng1() or load_windows_epng2() or load_windows_epng3()
+    if not load_library():
+        raise RuntimeError("This means you probably do not have eSpeak or eSpeak-ng installed!")
 except Exception as exp:
     print("Exception: " + str(exp) + "\n")
-    raise RuntimeError("This means you probably do not have eSpeak or eSpeak-ng installed!")
+    raise
 
 # constants and such from speak_lib.h
 
