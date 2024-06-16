@@ -172,6 +172,7 @@ class SAPI5DriverEventSink(object):
         d._speaking = False
         d._stopping = False
         d._proxy.setBusy(False)
+        d.endLoop() # hangs if you dont have this
         
     def _ISpeechVoiceEvents_Word(self, stream_number, stream_position, char, length):
         self._driver._proxy.notify(
