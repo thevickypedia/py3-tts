@@ -152,6 +152,7 @@ class NSSpeechDriver(NSObject):
             success = True
         self._proxy.notify('finished-utterance', completed=success)
         self._proxy.setBusy(False)
+        self.endLoop()
 
     def speechSynthesizer_willSpeakWord_ofString_(self, tts, rng, text):
         self._proxy.notify('started-word', location=rng.location,
