@@ -68,8 +68,13 @@ class EspeakDriver(object):
             for v in _espeak.ListVoices(None):
                 kwargs = {'id': fromUtf8(v.name), 'name': fromUtf8(v.name)}
                 if v.languages:
-                    kwargs['languages'] = [v.languages]
-                genders = [None, 'male', 'female']
+                    try:
+                        language_code_bytes = v.languages[1:]
+                        language_code = language_code_bytes.decode('utf-8', errors='ignore')
+                        kwargs['languages'] = [language_code]
+                    except UnicodeDecodeError as e:
+                        kwargs['languages'] = ["Unknown"]
+                    genders = [None, 'male', 'female']
                 kwargs['gender'] = genders[v.gender]
                 kwargs['age'] = v.age or None
                 voices.append(Voice(**kwargs))
