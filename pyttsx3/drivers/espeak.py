@@ -146,7 +146,16 @@ class EspeakDriver(object):
             if event.type == _espeak.EVENT_LIST_TERMINATED:
                 break
             if event.type == _espeak.EVENT_WORD:
-                self._proxy.notify('started-word', location=event.text_position, length=event.length)
+                
+                if self._text_to_say:
+                    start_index = event.text_position-1
+                    end_index = start_index + event.length
+                    word = self._text_to_say[start_index:end_index]
+                else:
+                    word = "Unknown"
+
+                self._proxy.notify('started-word', name=word, location=event.text_position, length=event.length)
+
             elif event.type == _espeak.EVENT_END:
                 stream = NamedTemporaryFile(delete=False, suffix='.wav')
     

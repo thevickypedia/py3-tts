@@ -104,7 +104,7 @@ class DriverProxy(object):
         @param kwargs: Arbitrary keyword arguments
         @type kwargs: dict
         """
-        kwargs['name'] = self._name
+        kwargs['name'] = kwargs.get('name', self._name)
         self._engine._notify(topic, **kwargs)
 
     def setBusy(self, busy):
