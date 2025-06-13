@@ -1,13 +1,24 @@
-from __future__ import print_function
-
 import time
-from ctypes import (CFUNCTYPE, POINTER, Structure, Union, c_char_p, c_int,
-                    c_long, c_short, c_ubyte, c_uint, c_ulong, c_void_p,
-                    c_wchar, cdll)
+from ctypes import (
+    CFUNCTYPE,
+    POINTER,
+    Structure,
+    Union,
+    c_char_p,
+    c_int,
+    c_long,
+    c_short,
+    c_ubyte,
+    c_uint,
+    c_ulong,
+    c_void_p,
+    c_wchar,
+    cdll,
+)
 
 
 def cfunc(name, dll, result, *args):
-    """build and apply a ctypes prototype complete with parameter flags"""
+    """Build and apply a ctypes prototype complete with parameter flags."""
     atypes = []
     aflags = []
     for arg in args:
@@ -19,71 +30,37 @@ def cfunc(name, dll, result, *args):
 dll = None
 
 
-def load_linux_ep():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('libespeak.so.1')
-    except Exception:
-        return False
-    else:
-        return True
+def load_library() -> bool:
+    global dll  # noqa: PLW0603
+    paths = (
+        # macOS paths
+        "/opt/homebrew/lib/libespeak-ng.1.dylib",
+        "/usr/local/lib/libespeak-ng.1.dylib",
+        "/usr/local/lib/libespeak.dylib",
+        # Linux paths
+        "libespeak-ng.so.1",
+        "/usr/local/lib/libespeak-ng.so.1",
+        "libespeak.so.1",
+        # Windows paths
+        r"C:\Program Files\eSpeak NG\libespeak-ng.dll",
+        r"C:\Program Files (x86)\eSpeak NG\libespeak-ng.dll",
+    )
 
-
-def load_linux_epng():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('libespeak-ng.so.1')
-    except Exception:
-        return False
-    else:
-        return True
-
-
-def load_linux_epng2():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('/usr/local/lib/libespeak-ng.so.1')
-    except Exception:
-        return False
-    else:
-        return True
-
-
-def load_windows_epng1():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('libespeak-ng.dll')
-    except Exception:
-        return False
-    else:
-        return True
-
-
-def load_windows_epng2():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('C:\\Program Files\\eSpeak NG\\libespeak-ng.dll')
-    except Exception:
-        return False
-    else:
-        return True
-
-
-def load_windows_epng3():
-    global dll
-    try:
-        dll = cdll.LoadLibrary('C:\\Program Files (x86)\\eSpeak NG\\libespeak-ng.dll')
-    except Exception:
-        return False
-    else:
-        return True
+    for path in paths:
+        try:
+            dll = cdll.LoadLibrary(path)
+            return True
+        except Exception:  # noqa: PERF203
+            continue  # Try the next path
+    return False
 
 
 try:
-    load_linux_ep() or load_linux_epng() or load_linux_epng2() or load_windows_epng1() or load_windows_epng2() or load_windows_epng3()
-except Exception as exp:
-    print("Exception: " + str(exp) + "\n")
-    raise RuntimeError("This means you probably do not have eSpeak or eSpeak-ng installed!")
+    if not load_library():
+        msg = "This means you probably do not have eSpeak or eSpeak-ng installed!"
+        raise RuntimeError(msg)
+except Exception:
+    raise
 
 # constants and such from speak_lib.h
 
@@ -97,23 +74,20 @@ EVENT_MSG_TERMINATED = 6
 
 
 class numberORname(Union):
-    _fields_ = [
-        ('number', c_int),
-        ('name', c_char_p)
-    ]
+    _fields_ = (("number", c_int), ("name", c_char_p))
 
 
 class EVENT(Structure):
-    _fields_ = [
-        ('type', c_int),
-        ('unique_identifier', c_uint),
-        ('text_position', c_int),
-        ('length', c_int),
-        ('audio_position', c_int),
-        ('sample', c_int),
-        ('user_data', c_void_p),
-        ('id', numberORname)
-    ]
+    _fields_ = (
+        ("type", c_int),
+        ("unique_identifier", c_uint),
+        ("text_position", c_int),
+        ("length", c_int),
+        ("audio_position", c_int),
+        ("sample", c_int),
+        ("user_data", c_void_p),
+        ("id", numberORname),
+    )
 
 
 AUDIO_OUTPUT_PLAYBACK = 0
@@ -126,13 +100,17 @@ EE_INTERNAL_ERROR = -1
 EE_BUFFER_FULL = 1
 EE_NOT_FOUND = 2
 
-Initialize = cfunc('espeak_Initialize', dll, c_int,
-                   ('output', c_int, 1, AUDIO_OUTPUT_PLAYBACK),
-                   ('bufflength', c_int, 1, 100),
-                   ('path', c_char_p, 1, None),
-                   ('option', c_int, 1, 0))
+Initialize = cfunc(
+    "espeak_Initialize",
+    dll,
+    c_int,
+    ("output", c_int, 1, AUDIO_OUTPUT_PLAYBACK),
+    ("bufflength", c_int, 1, 100),
+    ("path", c_char_p, 1, None),
+    ("option", c_int, 1, 0),
+)
 Initialize.__doc__ = """Must be called before any synthesis functions are called.
-  output: the audio data can either be played by eSpeak or passed back by the SynthCallback function. 
+  output: the audio data can either be played by eSpeak or passed back by the SynthCallback function.
   buflength:  The length in mS of sound buffers passed to the SynthCallback function.
   path: The directory which contains the espeak-data directory, or NULL for the default location.
   options: bit 0: 1=allow espeakEVENT_PHONEME events.
@@ -141,20 +119,21 @@ Initialize.__doc__ = """Must be called before any synthesis functions are called
 
 t_espeak_callback = CFUNCTYPE(c_int, POINTER(c_short), c_int, POINTER(EVENT))
 
-cSetSynthCallback = cfunc('espeak_SetSynthCallback', dll, None,
-                          ('SynthCallback', t_espeak_callback, 1))
+cSetSynthCallback = cfunc(
+    "espeak_SetSynthCallback", dll, None, ("SynthCallback", t_espeak_callback, 1)
+)
 SynthCallback = None
 
 
-def SetSynthCallback(cb):
-    global SynthCallback
+def SetSynthCallback(cb) -> None:
+    global SynthCallback  # noqa: PLW0603
     SynthCallback = t_espeak_callback(cb)
     cSetSynthCallback(SynthCallback)
 
 
 SetSynthCallback.__doc__ = """Must be called before any synthesis functions are called.
    This specifies a function in the calling program which is called when a buffer of
-   speech sound data has been produced. 
+   speech sound data has been produced.
 
 
    The callback function is of the form:
@@ -169,20 +148,21 @@ int SynthCallback(short *wav, int numsamples, espeak_EVENT *events);
       sometimes be zero (which does NOT indicate end of synthesis).
 
    events: an array of espeak_EVENT items which indicate word and sentence events, and
-      also the occurance if <mark> and <audio> elements within the text.
+      also the occurrence if <mark> and <audio> elements within the text.
 
 
    Callback returns: 0=continue synthesis,  1=abort synthesis."""
 
 t_UriCallback = CFUNCTYPE(c_int, c_int, c_char_p, c_char_p)
 
-cSetUriCallback = cfunc('espeak_SetUriCallback', dll, None,
-                        ('UriCallback', t_UriCallback, 1))
+cSetUriCallback = cfunc(
+    "espeak_SetUriCallback", dll, None, ("UriCallback", t_UriCallback, 1)
+)
 UriCallback = None
 
 
-def SetUriCallback(cb):
-    global UriCallback
+def SetUriCallback(cb) -> None:
+    global UriCallback  # noqa: PLW0603
     UriCallback = t_UriCallback(UriCallback)
     cSetUriCallback(UriCallback)
 
@@ -222,19 +202,41 @@ POS_WORD = 2
 POS_SENTENCE = 3
 
 
-def Synth(text, position=0, position_type=POS_CHARACTER, end_position=0, flags=0, user_data=None):
-    return cSynth(text, len(text) * 10, position, position_type, end_position, flags, None, user_data)
+def Synth(  # noqa: PLR0913
+    text,
+    position=0,
+    position_type=POS_CHARACTER,
+    end_position=0,
+    flags=0,
+    user_data=None,
+):
+    if isinstance(text, str):
+        text = text.encode("utf-8")
+    return cSynth(
+        text,
+        len(text) * 10,
+        position,
+        position_type,
+        end_position,
+        flags,
+        None,
+        user_data,
+    )
 
 
-cSynth = cfunc('espeak_Synth', dll, c_int,
-               ('text', c_char_p, 1),
-               ('size', c_long, 1),
-               ('position', c_uint, 1, 0),
-               ('position_type', c_int, 1, POS_CHARACTER),
-               ('end_position', c_uint, 1, 0),
-               ('flags', c_uint, 1, CHARS_AUTO),
-               ('unique_identifier', POINTER(c_uint), 1, None),
-               ('user_data', c_void_p, 1, None))
+cSynth = cfunc(
+    "espeak_Synth",
+    dll,
+    c_int,
+    ("text", c_char_p, 1),
+    ("size", c_long, 1),
+    ("position", c_uint, 1, 0),
+    ("position_type", c_int, 1, POS_CHARACTER),
+    ("end_position", c_uint, 1, 0),
+    ("flags", c_uint, 1, CHARS_AUTO),
+    ("unique_identifier", POINTER(c_uint), 1, None),
+    ("user_data", c_void_p, 1, None),
+)
 Synth.__doc__ = """Synthesize speech for the specified text.  The speech sound data is passed to the calling
    program in buffers by means of the callback function specified by espeak_SetSynthCallback(). The command is asynchronous: it is internally buffered and returns as soon as possible. If espeak_Initialize was previously called with AUDIO_OUTPUT_PLAYBACK as argument, the sound data are played by eSpeak.
 
@@ -250,7 +252,7 @@ Synth.__doc__ = """Synthesize speech for the specified text.  The speech sound d
       start of the text.
 
    position_type:  Determines whether "position" is a number of characters, words, or sentences.
-      Values: 
+      Values:
 
    end_position:  If set, this gives a character position at which speaking will stop.  A value
       of zero indicates no end position.
@@ -269,29 +271,33 @@ Synth.__doc__ = """Synthesize speech for the specified text.  The speech sound d
       espeak.ENDPAUSE  If set then a sentence pause is added at the end of the text.  If not set then
          this pause is suppressed.
 
-   unique_identifier: message identifier; helpful for identifying later 
+   unique_identifier: message identifier; helpful for identifying later
      data supplied to the callback.
 
    user_data: pointer which will be passed to the callback function.
 
-   Return: EE_OK: operation achieved 
-           EE_BUFFER_FULL: the command can not be buffered; 
+   Return: EE_OK: operation achieved
+           EE_BUFFER_FULL: the command can not be buffered;
              you may try after a while to call the function again.
-	   EE_INTERNAL_ERROR."""
+           EE_INTERNAL_ERROR."""
 
 
-def Synth_Mark(text, index_mark, end_position=0, flags=CHARS_AUTO):
+def Synth_Mark(text, index_mark, end_position=0, flags=CHARS_AUTO) -> None:
     cSynth_Mark(text, len(text) + 1, index_mark, end_position, flags)
 
 
-cSynth_Mark = cfunc('espeak_Synth_Mark', dll, c_int,
-                    ('text', c_char_p, 1),
-                    ('size', c_ulong, 1),
-                    ('index_mark', c_char_p, 1),
-                    ('end_position', c_uint, 1, 0),
-                    ('flags', c_uint, 1, CHARS_AUTO),
-                    ('unique_identifier', POINTER(c_uint), 1, None),
-                    ('user_data', c_void_p, 1, None))
+cSynth_Mark = cfunc(
+    "espeak_Synth_Mark",
+    dll,
+    c_int,
+    ("text", c_char_p, 1),
+    ("size", c_ulong, 1),
+    ("index_mark", c_char_p, 1),
+    ("end_position", c_uint, 1, 0),
+    ("flags", c_uint, 1, CHARS_AUTO),
+    ("unique_identifier", POINTER(c_uint), 1, None),
+    ("user_data", c_void_p, 1, None),
+)
 Synth_Mark.__doc__ = """Synthesize speech for the specified text.  Similar to espeak_Synth() but the start position is
    specified by the name of a <mark> element in the text.
 
@@ -300,29 +306,27 @@ Synth_Mark.__doc__ = """Synthesize speech for the specified text.  Similar to es
 
    For the other parameters, see espeak_Synth()
 
-   Return:  EE_OK: operation achieved 
-            EE_BUFFER_FULL: the command can not be buffered; 
+   Return:  EE_OK: operation achieved
+            EE_BUFFER_FULL: the command can not be buffered;
              you may try after a while to call the function again.
-	        EE_INTERNAL_ERROR."""
+                EE_INTERNAL_ERROR."""
 
-Key = cfunc('espeak_Key', dll, c_int,
-            ('key_name', c_char_p, 1))
+Key = cfunc("espeak_Key", dll, c_int, ("key_name", c_char_p, 1))
 Key.__doc__ = """Speak the name of a keyboard key.
-   Currently this just speaks the "key_name" as given 
+   Currently this just speaks the "key_name" as given
 
-   Return: EE_OK: operation achieved 
-           EE_BUFFER_FULL: the command can not be buffered; 
+   Return: EE_OK: operation achieved
+           EE_BUFFER_FULL: the command can not be buffered;
              you may try after a while to call the function again.
-	   EE_INTERNAL_ERROR."""
+           EE_INTERNAL_ERROR."""
 
-Char = cfunc('espeak_Char', dll, c_int,
-             ('character', c_wchar, 1))
-Char.__doc__ = """Speak the name of the given character 
+Char = cfunc("espeak_Char", dll, c_int, ("character", c_wchar, 1))
+Char.__doc__ = """Speak the name of the given character
 
-   Return: EE_OK: operation achieved 
-           EE_BUFFER_FULL: the command can not be buffered; 
+   Return: EE_OK: operation achieved
+           EE_BUFFER_FULL: the command can not be buffered;
              you may try after a while to call the function again.
-	   EE_INTERNAL_ERROR."""
+           EE_INTERNAL_ERROR."""
 
 # Speech Parameters
 SILENCE = 0  # internal use
@@ -339,10 +343,14 @@ PUNCT_NONE = 0
 PUNCT_ALL = 1
 PUNCT_SOME = 2
 
-SetParameter = cfunc('espeak_SetParameter', dll, c_int,
-                     ('parameter', c_int, 1),
-                     ('value', c_int, 1),
-                     ('relative', c_int, 1, 0))
+SetParameter = cfunc(
+    "espeak_SetParameter",
+    dll,
+    c_int,
+    ("parameter", c_int, 1),
+    ("value", c_int, 1),
+    ("relative", c_int, 1, 0),
+)
 SetParameter.__doc__ = """Sets the value of the specified parameter.
    relative=0   Sets the absolute value of the parameter.
    relative=1   Sets a relative value of the parameter.
@@ -357,7 +365,7 @@ SetParameter.__doc__ = """Sets the value of the specified parameter.
       espeak.RANGE:   pitch range, range 0-100. 0-monotone, 50=normal
 
       espeak.PUNCTUATION:  which punctuation characters to announce:
-         value in espeak_PUNCT_TYPE (none, all, some), 
+         value in espeak_PUNCT_TYPE (none, all, some),
          see espeak_GetParameter() to specify which characters are announced.
 
       espeak.CAPITALS: announce capital letters by:
@@ -367,31 +375,31 @@ SetParameter.__doc__ = """Sets the value of the specified parameter.
          3 or higher, by raising pitch.  This values gives the amount in Hz by which the pitch
             of a word raised to indicate it has a capital letter.
 
-   Return: EE_OK: operation achieved 
-           EE_BUFFER_FULL: the command can not be buffered; 
+   Return: EE_OK: operation achieved
+           EE_BUFFER_FULL: the command can not be buffered;
              you may try after a while to call the function again.
            EE_INTERNAL_ERROR."""
 
-GetParameter = cfunc('espeak_GetParameter', dll, c_int,
-                     ('parameter', c_int, 1))
+GetParameter = cfunc("espeak_GetParameter", dll, c_int, ("parameter", c_int, 1))
 GetParameter.__doc__ = """current=0  Returns the default value of the specified parameter.
    current=1  Returns the current value of the specified parameter, as set by SetParameter()"""
 
-SetPunctuationList = cfunc('espeak_SetPunctuationList', dll, c_int,
-                           ('punctlist', c_wchar, 1))
-SetPunctuationList.__doc__ = """Specified a list of punctuation characters whose names are 
+SetPunctuationList = cfunc(
+    "espeak_SetPunctuationList", dll, c_int, ("punctlist", c_wchar, 1)
+)
+SetPunctuationList.__doc__ = """Specified a list of punctuation characters whose names are
 to be spoken when the value of the Punctuation parameter is set to "some".
 
    punctlist:  A list of character codes, terminated by a zero character.
 
-   Return:  EE_OK: operation achieved 
-            EE_BUFFER_FULL: the command can not be buffered; 
+   Return:  EE_OK: operation achieved
+            EE_BUFFER_FULL: the command can not be buffered;
              you may try after a while to call the function again.
             EE_INTERNAL_ERROR."""
 
-SetPhonemeTrace = cfunc('espeak_SetPhonemeTrace', dll, None,
-                        ('value', c_int, 1),
-                        ('stream', c_void_p, 1))
+SetPhonemeTrace = cfunc(
+    "espeak_SetPhonemeTrace", dll, None, ("value", c_int, 1), ("stream", c_void_p, 1)
+)
 SetPhonemeTrace.__doc__ = """Controls the output of phoneme symbols for the text
    value=0  No phoneme output (default)
    value=1  Output the translated phoneme symbols for the text
@@ -399,9 +407,9 @@ SetPhonemeTrace.__doc__ = """Controls the output of phoneme symbols for the text
 
    stream   output stream for the phoneme symbols (and trace).  If stream=NULL then it uses stdout."""
 
-CompileDictionary = cfunc('espeak_CompileDictionary', dll, None,
-                          ('path', c_char_p, 1),
-                          ('log', c_void_p, 1))
+CompileDictionary = cfunc(
+    "espeak_CompileDictionary", dll, None, ("path", c_char_p, 1), ("log", c_void_p, 1)
+)
 CompileDictionary.__doc__ = """Compile pronunciation dictionary for a language which corresponds to the currently
    selected voice.  The required voice should be selected before calling this function.
 
@@ -411,28 +419,29 @@ CompileDictionary.__doc__ = """Compile pronunciation dictionary for a language w
 
 
 class VOICE(Structure):
-    _fields_ = [
-        ('name', c_char_p),
-        ('languages', c_char_p),
-        ('identifier', c_char_p),
-        ('gender', c_ubyte),
-        ('age', c_ubyte),
-        ('variant', c_ubyte),
-        ('xx1', c_ubyte),
-        ('score', c_int),
-        ('spare', c_void_p),
-    ]
+    _fields_ = (
+        ("name", c_char_p),
+        ("languages", c_char_p),
+        ("identifier", c_char_p),
+        ("gender", c_ubyte),
+        ("age", c_ubyte),
+        ("variant", c_ubyte),
+        ("xx1", c_ubyte),
+        ("score", c_int),
+        ("spare", c_void_p),
+    )
 
-    def __repr__(self):
-        """Print the fields"""
-        res = []
-        for field in self._fields_:
-            res.append('%s=%s' % (field[0], repr(getattr(self, field[0]))))
-        return self.__class__.__name__ + '(' + ','.join(res) + ')'
+    def __repr__(self) -> str:
+        """Print the fields."""
+        res = ",".join(
+            f"{field[0]}={getattr(self, field[0])!r}" for field in self._fields_
+        )
+        return f"{self.__class__.__name__}({res})"
 
 
-cListVoices = cfunc('espeak_ListVoices', dll, POINTER(POINTER(VOICE)),
-                    ('voice_spec', POINTER(VOICE), 1))
+cListVoices = cfunc(
+    "espeak_ListVoices", dll, POINTER(POINTER(VOICE)), ("voice_spec", POINTER(VOICE), 1)
+)
 cListVoices.__doc__ = """Reads the voice files from espeak-data/voices and creates an array of espeak_VOICE pointers.
    The list is terminated by a NULL pointer
 
@@ -442,11 +451,13 @@ cListVoices.__doc__ = """Reads the voice files from espeak-data/voices and creat
 
 
 def ListVoices(voice_spec=None):
-    """Reads the voice files from espeak-data/voices and returns a list of VOICE objects.
+    """
+    Reads the voice files from espeak-data/voices and returns a list of VOICE objects.
 
-   If voice_spec is None then all voices are listed.
-   If voice spec is given, then only the voices which are compatible with the voice_spec
-   are listed, and they are listed in preference order."""
+    If voice_spec is None then all voices are listed.
+    If voice spec is given, then only the voices which are compatible with the voice_spec
+    are listed, and they are listed in preference order.
+    """
     ppv = cListVoices(voice_spec)
     res = []
     i = 0
@@ -456,18 +467,18 @@ def ListVoices(voice_spec=None):
     return res
 
 
-SetVoiceByName = cfunc('espeak_SetVoiceByName', dll, c_int,
-                       ('name', c_char_p, 1))
+SetVoiceByName = cfunc("espeak_SetVoiceByName", dll, c_int, ("name", c_char_p, 1))
 SetVoiceByName.__doc__ = """Searches for a voice with a matching "name" field.  Language is not considered.
    "name" is a UTF8 string.
 
-   Return:   EE_OK: operation achieved 
-             EE_BUFFER_FULL: the command can not be buffered; 
+   Return:   EE_OK: operation achieved
+             EE_BUFFER_FULL: the command can not be buffered;
              you may try after a while to call the function again.
              EE_INTERNAL_ERROR."""
 
-SetVoiceByProperties = cfunc('espeak_SetVoiceByProperties', dll, c_int,
-                             ('voice_spec', POINTER(VOICE), 1))
+SetVoiceByProperties = cfunc(
+    "espeak_SetVoiceByProperties", dll, c_int, ("voice_spec", POINTER(VOICE), 1)
+)
 SetVoiceByProperties.__doc__ = """An espeak_VOICE structure is used to pass criteria to select a voice.  Any of the following
    fields may be set:
 
@@ -483,38 +494,42 @@ SetVoiceByProperties.__doc__ = """An espeak_VOICE structure is used to pass crit
             that list and choose a voice.
             variant=0 takes the top voice (i.e. best match). variant=1 takes the next voice, etc"""
 
-GetCurrentVoice = cfunc('espeak_GetCurrentVoice', dll, POINTER(VOICE),
-                        )
+GetCurrentVoice = cfunc(
+    "espeak_GetCurrentVoice",
+    dll,
+    POINTER(VOICE),
+)
 GetCurrentVoice.__doc__ = """Returns the espeak_VOICE data for the currently selected voice.
    This is not affected by temporary voice changes caused by SSML elements such as <voice> and <s>"""
 
-Cancel = cfunc('espeak_Cancel', dll, c_int)
+Cancel = cfunc("espeak_Cancel", dll, c_int)
 Cancel.__doc__ = """Stop immediately synthesis and audio output of the current text. When this
    function returns, the audio output is fully stopped and the synthesizer is ready to
    synthesize a new message.
 
-   Return:  EE_OK: operation achieved 
+   Return:  EE_OK: operation achieved
             EE_INTERNAL_ERROR."""
 
-IsPlaying = cfunc('espeak_IsPlaying', dll, c_int)
+IsPlaying = cfunc("espeak_IsPlaying", dll, c_int)
 IsPlaying.__doc__ = """Returns 1 if audio is played, 0 otherwise."""
 
-Synchronize = cfunc('espeak_Synchronize', dll, c_int)
+Synchronize = cfunc("espeak_Synchronize", dll, c_int)
 Synchronize.__doc__ = """This function returns when all data have been spoken.
-   Return:  EE_OK: operation achieved 
-	        EE_INTERNAL_ERROR."""
+   Return:  EE_OK: operation achieved
+                EE_INTERNAL_ERROR."""
 
-Terminate = cfunc('espeak_Terminate', dll, c_int)
+Terminate = cfunc("espeak_Terminate", dll, c_int)
 Terminate.__doc__ = """last function to be called.
-   Return:  EE_OK: operation achieved 
-	        EE_INTERNAL_ERROR."""
+   Return:  EE_OK: operation achieved
+                EE_INTERNAL_ERROR."""
 
-Info = cfunc('espeak_Info', dll, c_char_p, ('ptr', c_void_p, 1, 0))
+Info = cfunc("espeak_Info", dll, c_char_p, ("ptr", c_void_p, 1, 0))
 Info.__doc__ = """Returns the version number string.
 The parameter is for future use, and should be set to NULL"""
 
-if __name__ == '__main__':
-    def synth_cb(wav, numsample, events):
+if __name__ == "__main__":
+
+    def synth_cb(wav, numsample, events) -> int:
         print(numsample, end="")
         i = 0
         while True:
@@ -524,12 +539,11 @@ if __name__ == '__main__':
             i += 1
         return 0
 
-
     samplerate = Initialize(output=AUDIO_OUTPUT_PLAYBACK)
     SetSynthCallback(synth_cb)
-    s = 'This is a test, only a test. '
+    s = "This is a test, only a test. "
     uid = c_uint(0)
-    # print 'pitch=',GetParameter(PITCH)
+    # print('pitch=',GetParameter(PITCH))
     # SetParameter(PITCH, 50, 0)
     print(Synth(s))
     while IsPlaying():

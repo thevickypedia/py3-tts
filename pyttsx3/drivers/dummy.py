@@ -1,9 +1,9 @@
+import contextlib
 import time
 
-from ..voice import Voice
+from pyttsx3.voice import Voice
 
 
-# noinspection PyPep8Naming
 def buildDriver(proxy):
     """
     Builds a new instance of a driver and returns it for use by the driver
@@ -15,8 +15,7 @@ def buildDriver(proxy):
     return DummyDriver(proxy)
 
 
-# noinspection PyPep8Naming,PyBroadException
-class DummyDriver(object):
+class DummyDriver:
     """
     Dummy speech engine implementation. Documents the interface, notifications,
     properties, and sequencing responsibilities of a driver implementation.
@@ -29,7 +28,7 @@ class DummyDriver(object):
     @ivar _looping: bool
     """
 
-    def __init__(self, proxy):
+    def __init__(self, proxy) -> None:
         """
         Constructs the driver.
 
@@ -41,26 +40,25 @@ class DummyDriver(object):
         # hold config values as if we had a real tts implementation that
         # supported them
         voices = [
-            Voice('dummy.voice1', 'John Doe', ['en-US', 'en-GB'], 'male', 'adult'),
-            Voice('dummy.voice2', 'Jane Doe', ['en-US', 'en-GB'], 'female', 'adult'),
-            Voice('dummy.voice3', 'Jimmy Doe', ['en-US', 'en-GB'], 'male', 10)
+            Voice("dummy.voice1", "John Doe", ["en-US", "en-GB"], "male", "adult"),
+            Voice("dummy.voice2", "Jane Doe", ["en-US", "en-GB"], "female", "adult"),
+            Voice("dummy.voice3", "Jimmy Doe", ["en-US", "en-GB"], "male", 10),
         ]
         self._config = {
-            'rate': 200,
-            'volume': 1.0,
-            'voice': voices[0],
-            'voices': voices
+            "rate": 200,
+            "volume": 1.0,
+            "voice": voices[0],
+            "voices": voices,
         }
 
-    def destroy(self):
+    def destroy(self) -> None:
         """
         Optional method that will be called when the driver proxy is being
-        destroyed. Can clean up any resources to make sure the engine terminates
+        destroyed. Can cleanup any resources to make sure the engine terminates
         properly.
         """
-        pass
 
-    def startLoop(self):
+    def startLoop(self) -> None:
         """
         Starts a blocking run loop in which driver callbacks are properly
         invoked.
@@ -76,23 +74,21 @@ class DummyDriver(object):
                 first = False
             time.sleep(0.5)
 
-    def endLoop(self):
+    def endLoop(self) -> None:
         """
         Stops a previously started run loop.
 
-        @precondition: A previous call to L{startLoop} suceeded and there was
+        @precondition: A previous call to L{startLoop} succeeded and there was
             no intervening call to L{endLoop}.
         """
         self._looping = False
 
     def iterate(self):
-        """
-        Iterates from within an external run loop.
-        """
+        """Iterates from within an external run loop."""
         self._proxy.setBusy(False)
         yield
 
-    def say(self, text):
+    def say(self, text) -> None:
         """
         Speaks the given text. Generates the following notifications during
         output:
@@ -117,29 +113,26 @@ class DummyDriver(object):
         @type text: unicode
         """
         self._proxy.setBusy(True)
-        self._proxy.notify('started-utterance')
+        self._proxy.notify("started-utterance")
         i = 0
-        for word in text.split(' '):
-            self._proxy.notify('started-word', location=i, length=len(word))
-            try:
-                i = text.index(' ', i + 1) + 1
-            except Exception:
-                pass
-        self._proxy.notify('finished-utterance', completed=True)
+        for word in text.split(" "):
+            self._proxy.notify("started-word", location=i, length=len(word))
+            with contextlib.suppress(Exception):
+                i = text.index(" ", i + 1) + 1
+        self._proxy.notify("finished-utterance", completed=True)
         self._proxy.setBusy(False)
 
-    def stop(self):
+    def stop(self) -> None:
         """
         Stops any current output. If an utterance was being spoken, the driver
         is still responsible for sending the closing finished-utterance
         notification documented above and resetting the busy state of the
         proxy.
         """
-        pass
 
     def getProperty(self, name):
         """
-        Gets a property value of the speech engine. The suppoted properties
+        Gets a property value of the speech engine. The supported properties
         and their values are:
 
         voices: List of L{voice.Voice} objects supported by the driver
@@ -154,12 +147,13 @@ class DummyDriver(object):
         try:
             return self._config[name]
         except KeyError:
-            raise KeyError('unknown property %s' % name)
+            msg = f"unknown property {name}"
+            raise KeyError(msg)
 
-    def setProperty(self, name, value):
+    def setProperty(self, name, value) -> None:
         """
         Sets one of the supported property values of the speech engine listed
-        above. If a value is invalid, attempts to clip it / coerce, so it is
+        above. If a value is invalid, attempts to clip it / coerce so it is
         valid before giving up and firing an exception.
 
         @param name: Property name
@@ -169,12 +163,13 @@ class DummyDriver(object):
         @raise KeyError: When the property name is unknown
         @raise ValueError: When the value cannot be coerced to fit the property
         """
-        if name == 'voice':
-            v = filter(lambda v: v.id == value, self._config['voices'])
-            self._config['voice'] = v[0]
-        elif name == 'rate':
-            self._config['rate'] = value
-        elif name == 'volume':
-            self._config['volume'] = value
+        if name == "voice":
+            v = filter(lambda v: v.id == value, self._config["voices"])
+            self._config["voice"] = v[0]
+        elif name == "rate":
+            self._config["rate"] = value
+        elif name == "volume":
+            self._config["volume"] = value
         else:
-            raise KeyError('unknown property %s' % name)
+            msg = f"unknown property {name}"
+            raise KeyError(msg)

@@ -1,16 +1,50 @@
+fail_fast: true
+exclude: ^(example/|tests/|.github/|docs/|doc_generator/)
 repos:
-  -
-    repo: https://github.com/PyCQA/isort
-    rev: '5.12.0'
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
     hooks:
-      -
-        id: isort
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-toml
+      - id: check-vcs-permalinks
+      - id: check-xml
+      - id: check-yaml
+      - id: debug-statements
+      - id: detect-aws-credentials
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: file-contents-sorter
+      - id: fix-byte-order-marker
+      - id: forbid-submodules
+      - id: mixed-line-ending
+      - id: name-tests-test
+      - id: requirements-txt-fixer
+      - id: sort-simple-yaml
+      - id: trailing-whitespace
 
-  -
-    repo: local
+  - repo: https://github.com/psf/black
+    # Latest version is just ugly and does the opposite of a linter
+    rev: 22.3.0
     hooks:
-      -
-        id: docs
+      - id: black
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: [ --profile, black ]
+
+  - repo: local
+    hooks:
+      - id: docs
         name: docs
         entry: /bin/bash gen_docs.sh
         language: system

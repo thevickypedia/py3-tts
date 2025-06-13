@@ -74,41 +74,51 @@ pyttsx3.speak("I will speak this text")
 
 ```python
 import pyttsx3
+engine = pyttsx3.init() # object creation
 
-engine = pyttsx3.init()  # object creation
+# RATE
+rate = engine.getProperty('rate')   # getting details of current speaking rate
+print (rate)                        # printing current voice rate
+engine.setProperty('rate', 125)     # setting up new voice rate
 
-""" RATE"""
-rate = engine.getProperty('rate')  # getting details of current speaking rate
-print(rate)  # printing current voice rate
-engine.setProperty('rate', 125)  # setting up new voice rate
+# VOLUME
+volume = engine.getProperty('volume')   # getting to know current volume level (min=0 and max=1)
+print (volume)                          # printing current volume level
+engine.setProperty('volume',1.0)        # setting up volume level  between 0 and 1
 
-"""VOLUME"""
-volume = engine.getProperty('volume')  # getting to know current volume level (min=0 and max=1)
-print(volume)  # printing current volume level
-engine.setProperty('volume', 1.0)  # setting up volume level  between 0 and 1
-
-"""VOICE"""
-voices = engine.getProperty('voices')  # getting details of current voice
-# engine.setProperty('voice', voices[0].id)  #changing index, changes voices. o for male
-engine.setProperty('voice', voices[1].id)  # changing index, changes voices. 1 for female
+# VOICE
+voices = engine.getProperty('voices')       # getting details of current voice
+#engine.setProperty('voice', voices[0].id)  # changing index, changes voices. o for male
+engine.setProperty('voice', voices[1].id)   # changing index, changes voices. 1 for female
 
 engine.say("Hello World!")
 engine.say('My current speaking rate is ' + str(rate))
 engine.runAndWait()
 engine.stop()
 
-"""Saving Voice to a file"""
-# On linux make sure that 'espeak' and 'ffmpeg' are installed
+# Saving Voice to a file
+# On Linux, make sure that 'espeak-ng' is installed
 engine.save_to_file('Hello World', 'test.mp3')
 engine.runAndWait()
 
 ```
 
-#### Included TTS engines
+#### Included Text-To-Speech Engines by Operating System
+|                         | Linux | macOS | Windows |
+|-------------------------|:-----:|:-----:|:-------:|
+| [AVSpeech][]            |       |   ✅︎  |         |
+| [eSpeak][]              |   ✅︎  |   ✅︎  |    ✅︎   |
+| [NSSpeechSynthesizer][] |       |   ✅︎  |         |
+| [SAPI5][]               |       |       |    ✅︎   |
 
-* sapi5
-* nsss
-* espeak
+> [!NOTE]
+> * AVSpeechSynthesizer support is still experimental.
+> * NSSpeechSynthesizer is deprecated by Apple.
+
+[AVSpeech]: https://developer.apple.com/documentation/avfoundation/speech_synthesis
+[eSpeak]: https://github.com/espeak-ng/espeak-ng?tab=readme-ov-file#readme
+[NSSpeechSynthesizer]: https://developer.apple.com/documentation/appkit/nsspeechsynthesizer
+[SAPI5]: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ms723627(v=vs.85)
 
 Feel free to wrap another text-to-speech engine for use with ``pyttsx3``.
 

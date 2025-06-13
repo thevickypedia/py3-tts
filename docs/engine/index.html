@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>Using py3-tts &#8212; py3-tts 3.3 documentation</title>
+    <title>Using py3-tts &#8212; py3-tts 3.5 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
@@ -21,8 +21,9 @@
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -348,7 +349,7 @@
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
 <section id="speaking-text">
 <h3>Speaking text<a class="headerlink" href="#speaking-text" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyttsx3</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyttsx3</span>
 <span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;Sally sells seashells by the seashore.&#39;</span><span class="p">)</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;The quick brown fox jumped over the lazy dog.&#39;</span><span class="p">)</span>
@@ -358,7 +359,7 @@
 </section>
 <section id="saving-voice-to-a-file">
 <h3>Saving voice to a file<a class="headerlink" href="#saving-voice-to-a-file" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyttsx3</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyttsx3</span>
 <span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span> <span class="p">,</span> <span class="s1">&#39;test.mp3&#39;</span><span class="p">)</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
@@ -367,12 +368,12 @@
 </section>
 <section id="listening-for-events">
 <h3>Listening for events<a class="headerlink" href="#listening-for-events" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyttsx3</span>
-<span class="k">def</span> <span class="nf">onStart</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyttsx3</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">onStart</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="nb">print</span> <span class="s1">&#39;starting&#39;</span><span class="p">,</span> <span class="n">name</span>
-<span class="k">def</span> <span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
     <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
-<span class="k">def</span> <span class="nf">onEnd</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">completed</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">onEnd</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">completed</span><span class="p">):</span>
     <span class="nb">print</span> <span class="s1">&#39;finishing&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">completed</span>
 <span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;started-utterance&#39;</span><span class="p">,</span> <span class="n">onStart</span><span class="p">)</span>
@@ -385,8 +386,8 @@
 </section>
 <section id="interrupting-an-utterance">
 <h3>Interrupting an utterance<a class="headerlink" href="#interrupting-an-utterance" title="Permalink to this heading">¶</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyttsx3</span>
-<span class="k">def</span> <span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyttsx3</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
     <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
     <span class="k">if</span> <span class="n">location</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
         <span class="n">engine</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
@@ -431,11 +432,11 @@
 <section id="running-a-driver-event-loop">
 <h3>Running a driver event loop<a class="headerlink" href="#running-a-driver-event-loop" title="Permalink to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">onStart</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">onStart</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
     <span class="nb">print</span> <span class="s1">&#39;starting&#39;</span><span class="p">,</span> <span class="n">name</span>
-<span class="k">def</span> <span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">onWord</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
     <span class="nb">print</span> <span class="s1">&#39;word&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">length</span>
-<span class="k">def</span> <span class="nf">onEnd</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">completed</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">onEnd</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">completed</span><span class="p">):</span>
     <span class="nb">print</span> <span class="s1">&#39;finishing&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">completed</span>
     <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;fox&#39;</span><span class="p">:</span>
         <span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;What a lazy dog!&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">)</span>
@@ -526,11 +527,11 @@
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2022, Vignesh S Rao.
+      &#169;2022, Vignesh S Rao.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.1.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 5.1.1</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
       
       |
       <a href="../_sources/engine.rst.txt"
