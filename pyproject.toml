@@ -2,15 +2,15 @@
 name = "py3-tts"
 dynamic = ["version"]
 dependencies = [
-    "comtypes; platform_system == 'Windows'",
-    "pypiwin32; platform_system == 'Windows'",
     "pywin32; platform_system == 'Windows'",
-    "pyobjc==9.0.1; platform_system == 'Darwin'",
-    "six"
+    "comtypes; platform_system == 'Windows'",
+    "pyobjc-framework-cocoa>=2.4; platform_system=='Darwin'",
+    "pyobjc-framework-AVFoundation>=2.4; platform_system=='Darwin'",
+    "pyobjc-framework-ExceptionHandling>=2.4; platform_system=='Darwin'",
 ]
 description = "Text to Speech (TTS) library for Python 3. Works without internet connection or delay. Supports multiple TTS engines, including Sapi5, nsss, and espeak."
 readme = "README.md"
-authors = [{ name = "Vignesh Sivanandha Rao", email = "svignesh1793@gmail.com" }]
+authors = [{ name = "Vignesh Rao", email = "svignesh1793@gmail.com" }]
 license = { file = "LICENSE" }
 classifiers = [
     "Intended Audience :: Developers",
@@ -22,11 +22,11 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Operating System :: POSIX",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 keywords = ["pyttsx", "ivona", "pyttsx for python3", "TTS for python3", "py3-tts", "text to speech for python", "tts",
     "text to speech", "speech", "speech synthesis", "offline text to speech", "offline tts", "gtts"]
