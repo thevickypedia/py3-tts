@@ -2,7 +2,7 @@ import weakref
 
 from .engine import Engine
 
-version = "4.0"
+version = "4.1"
 _activeEngines = weakref.WeakValueDictionary()
 
 
@@ -22,5 +22,5 @@ def init(driverName: str = None, debug: bool = False) -> Engine:
         eng = _activeEngines[driverName]
     except KeyError:
         eng = Engine(driverName, debug)
-        _activeEngines[driverName] = eng
+    _activeEngines[driverName] = eng
     return eng
